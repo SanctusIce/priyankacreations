@@ -2,22 +2,22 @@ import { Link } from "react-router-dom";
 
 const categories = [
   {
-    name: "Kurtis",
-    description: "Elegant everyday wear",
-    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=400&h=500&fit=crop",
-    link: "/shop?category=kurtis"
-  },
-  {
-    name: "Palazzo Sets",
-    description: "Comfortable & stylish",
-    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop",
-    link: "/shop?category=palazzo"
-  },
-  {
     name: "Ethnic Wear",
     description: "Traditional elegance",
     image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=500&fit=crop",
     link: "/shop?category=ethnic"
+  },
+  {
+    name: "Western Wear",
+    description: "Modern & stylish",
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop",
+    link: "/shop?category=western"
+  },
+  {
+    name: "Festive Collection",
+    description: "Celebrate in style",
+    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=400&h=500&fit=crop",
+    link: "/shop?category=festive"
   },
   {
     name: "Party Wear",
@@ -32,10 +32,10 @@ const Categories = () => {
     <section className="py-12 lg:py-20 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-10">
-          <span className="text-sm font-semibold text-primary tracking-widest uppercase">
+          <span className="text-sm font-semibold text-primary tracking-widest uppercase font-body">
             Browse By
           </span>
-          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-2">
+          <h2 className="text-2xl lg:text-4xl font-bold text-foreground mt-2 font-heading">
             Shop Categories
           </h2>
         </div>
@@ -60,10 +60,10 @@ const Categories = () => {
               
               {/* Content */}
               <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6">
-                <h3 className="text-lg lg:text-xl font-bold text-background mb-1">
+                <h3 className="text-lg lg:text-xl font-bold text-background mb-1 font-heading">
                   {category.name}
                 </h3>
-                <p className="text-sm text-background/80 hidden lg:block">
+                <p className="text-sm text-background/80 hidden lg:block font-body">
                   {category.description}
                 </p>
               </div>

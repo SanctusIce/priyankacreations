@@ -16,6 +16,13 @@ import Wishlist from "./pages/Wishlist";
 import Sale from "./pages/Sale";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
+import Contact from "./pages/Contact";
+import FAQ from "./pages/FAQ";
+import Shipping from "./pages/Shipping";
+import Returns from "./pages/Returns";
+import SizeGuide from "./pages/SizeGuide";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
 import AdminOrders from "./pages/admin/AdminOrders";
@@ -42,6 +49,15 @@ const App = () => (
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
                 <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+                
+                {/* Static Pages */}
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/shipping" element={<Shipping />} />
+                <Route path="/returns" element={<Returns />} />
+                <Route path="/size-guide" element={<SizeGuide />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>
