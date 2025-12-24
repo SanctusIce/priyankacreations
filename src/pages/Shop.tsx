@@ -5,29 +5,53 @@ import Footer from '@/components/Footer';
 import { useProducts, useCategories } from '@/hooks/useProducts';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Search, Filter, Grid3X3, LayoutGrid, Loader2, Heart, ShoppingBag } from 'lucide-react';
+import { Search, SlidersHorizontal, ChevronDown, ChevronUp, Grid3X3, LayoutGrid, Loader2, Heart, Star, X } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { cn } from '@/lib/utils';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const Shop = () => {
   const [search, setSearch] = useState('');
   const [categorySlug, setCategorySlug] = useState<string>('');
   const [sortBy, setSortBy] = useState<'newest' | 'price_asc' | 'price_desc' | 'name'>('newest');
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 20000]);
-  const [gridCols, setGridCols] = useState<3 | 4>(4);
+  const [priceRange, setPriceRange] = useState<string>('');
+  const [gridCols, setGridCols] = useState<3 | 4 | 5>(4);
+  const [openFilters, setOpenFilters] = useState<Record<string, boolean>>({
+    categories: true,
+    price: true,
+  });
+
+  const priceRanges = [
+    { label: 'Rs. 299 to Rs. 599', min: 299, max: 599 },
+    { label: 'Rs. 599 to Rs. 999', min: 599, max: 999 },
+    { label: 'Rs. 999 to Rs. 1999', min: 999, max: 1999 },
+    { label: 'Rs. 1999 to Rs. 2999', min: 1999, max: 2999 },
+    { label: 'Rs. 2999 to Rs. 4999', min: 2999, max: 4999 },
+  ];
+
+  const selectedPriceRange = priceRanges.find(p => p.label === priceRange);
 
   const { data: products, isLoading } = useProducts({
     search,
     categorySlug: categorySlug || undefined,
     sortBy,
-    minPrice: priceRange[0],
-    maxPrice: priceRange[1],
+    minPrice: selectedPriceRange?.min || 0,
+    maxPrice: selectedPriceRange?.max || 100000,
   });
 
   const { data: categories } = useCategories();
@@ -42,228 +66,294 @@ const Shop = () => {
     }
   };
 
+  const toggleFilter = (key: string) => {
+    setOpenFilters(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const activeFiltersCount = [categorySlug, priceRange].filter(Boolean).length;
+
+  const clearAllFilters = () => {
+    setCategorySlug('');
+    setPriceRange('');
+    setSearch('');
+  };
+
+  const FilterSection = ({ title, filterKey, children }: { title: string; filterKey: string; children: React.ReactNode }) => (
+    <Collapsible open={openFilters[filterKey]} onOpenChange={() => toggleFilter(filterKey)}>
+      <CollapsibleTrigger className="flex items-center justify-between w-full py-4 border-b border-border">
+        <span className="text-sm font-bold uppercase tracking-wide">{title}</span>
+        {openFilters[filterKey] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+      </CollapsibleTrigger>
+      <CollapsibleContent className="py-4">
+        {children}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+
   const FilterSidebar = () => (
-    <div className="space-y-6">
+    <div className="space-y-0">
+      {/* Filters Header */}
+      <div className="flex items-center justify-between pb-4 border-b border-border">
+        <span className="text-sm font-bold uppercase tracking-wide">Filters</span>
+        {activeFiltersCount > 0 && (
+          <button 
+            onClick={clearAllFilters}
+            className="text-sm text-primary font-semibold hover:underline"
+          >
+            CLEAR ALL
+          </button>
+        )}
+      </div>
+
       {/* Categories */}
-      <div>
-        <h3 className="font-heading font-semibold text-lg mb-4">Categories</h3>
-        <div className="space-y-3">
-          <div className="flex items-center space-x-2">
+      <FilterSection title="Categories" filterKey="categories">
+        <div className="space-y-3 max-h-64 overflow-y-auto">
+          <label className="filter-item">
             <Checkbox
-              id="all"
               checked={categorySlug === ''}
               onCheckedChange={() => setCategorySlug('')}
             />
-            <Label htmlFor="all" className="cursor-pointer">All Products</Label>
-          </div>
+            <span>All Products</span>
+          </label>
           {categories?.map((category) => (
-            <div key={category.id} className="flex items-center space-x-2">
+            <label key={category.id} className="filter-item">
               <Checkbox
-                id={category.slug}
                 checked={categorySlug === category.slug}
                 onCheckedChange={() => setCategorySlug(category.slug)}
               />
-              <Label htmlFor={category.slug} className="cursor-pointer">{category.name}</Label>
-            </div>
+              <span>{category.name}</span>
+            </label>
           ))}
         </div>
-      </div>
+      </FilterSection>
 
       {/* Price Range */}
-      <div>
-        <h3 className="font-heading font-semibold text-lg mb-4">Price Range</h3>
-        <div className="px-2">
-          <Slider
-            value={priceRange}
-            onValueChange={(value) => setPriceRange(value as [number, number])}
-            min={0}
-            max={20000}
-            step={100}
-            className="mb-4"
-          />
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>₹{priceRange[0].toLocaleString()}</span>
-            <span>₹{priceRange[1].toLocaleString()}</span>
-          </div>
+      <FilterSection title="Price" filterKey="price">
+        <div className="space-y-3">
+          {priceRanges.map((range) => (
+            <label key={range.label} className="filter-item">
+              <Checkbox
+                checked={priceRange === range.label}
+                onCheckedChange={() => setPriceRange(priceRange === range.label ? '' : range.label)}
+              />
+              <span>{range.label}</span>
+            </label>
+          ))}
         </div>
-      </div>
+      </FilterSection>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-secondary/30">
       <Header />
 
-      <main className="container mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="font-heading text-4xl font-bold text-foreground mb-2">Shop Collection</h1>
-          <p className="text-muted-foreground">
-            Discover our exquisite collection of ethnic wear
-          </p>
+      <main className="pt-20 lg:pt-[70px]">
+        {/* Breadcrumb */}
+        <div className="bg-background border-b border-border">
+          <div className="container mx-auto px-4 py-3">
+            <nav className="flex items-center gap-2 text-sm">
+              <Link to="/" className="breadcrumb-link">Home</Link>
+              <span className="text-muted-foreground">/</span>
+              <span className="text-foreground font-medium">Shop All</span>
+            </nav>
+          </div>
         </div>
 
-        {/* Toolbar */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-
-          {/* Sort */}
-          <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
-            <SelectTrigger className="w-full md:w-48">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">Newest First</SelectItem>
-              <SelectItem value="price_asc">Price: Low to High</SelectItem>
-              <SelectItem value="price_desc">Price: High to Low</SelectItem>
-              <SelectItem value="name">Name: A to Z</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Grid Toggle (Desktop) */}
-          <div className="hidden md:flex items-center gap-2">
-            <Button
-              variant={gridCols === 3 ? 'secondary' : 'ghost'}
-              size="icon"
-              onClick={() => setGridCols(3)}
-            >
-              <LayoutGrid className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={gridCols === 4 ? 'secondary' : 'ghost'}
-              size="icon"
-              onClick={() => setGridCols(4)}
-            >
-              <Grid3X3 className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Filter Button (Mobile) */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" className="md:hidden">
-                <Filter className="h-4 w-4 mr-2" />
-                Filters
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left">
-              <SheetHeader>
-                <SheetTitle>Filters</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6">
-                <FilterSidebar />
+        {/* Results Header */}
+        <div className="bg-background border-b border-border">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-xl font-bold text-foreground">
+                  {categorySlug ? categories?.find(c => c.slug === categorySlug)?.name : 'All Products'}
+                  <span className="text-muted-foreground font-normal ml-2">
+                    - {products?.length || 0} items
+                  </span>
+                </h1>
               </div>
-            </SheetContent>
-          </Sheet>
-        </div>
 
-        <div className="flex gap-8">
-          {/* Sidebar (Desktop) */}
-          <aside className="hidden md:block w-64 flex-shrink-0">
-            <FilterSidebar />
-          </aside>
-
-          {/* Products Grid */}
-          <div className="flex-1">
-            {isLoading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            ) : products?.length === 0 ? (
-              <div className="text-center py-20">
-                <p className="text-muted-foreground text-lg">No products found</p>
-                <Button variant="outline" className="mt-4" onClick={() => {
-                  setSearch('');
-                  setCategorySlug('');
-                  setPriceRange([0, 20000]);
-                }}>
-                  Clear Filters
-                </Button>
-              </div>
-            ) : (
-              <div className={cn(
-                "grid gap-6",
-                gridCols === 3 ? "md:grid-cols-3" : "md:grid-cols-4",
-                "grid-cols-2"
-              )}>
-                {products?.map((product) => (
-                  <div key={product.id} className="group">
-                    <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-secondary mb-3">
-                      <Link to={`/product/${product.id}`}>
-                        <img
-                          src={product.images[0] || '/placeholder.svg'}
-                          alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </Link>
-
-                      {/* Badges */}
-                      <div className="absolute top-3 left-3 flex flex-col gap-2">
-                        {product.is_new && (
-                          <span className="px-2 py-1 text-xs font-medium bg-primary text-primary-foreground rounded">
-                            New
-                          </span>
-                        )}
-                        {product.compare_at_price && (
-                          <span className="px-2 py-1 text-xs font-medium bg-accent text-accent-foreground rounded">
-                            Sale
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Wishlist Button */}
-                      <button
-                        onClick={() => handleWishlistToggle(product.id)}
-                        className="absolute top-3 right-3 p-2 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
-                      >
-                        <Heart
-                          className={cn(
-                            "h-4 w-4 transition-colors",
-                            isInWishlist(product.id) ? "fill-destructive text-destructive" : "text-foreground"
-                          )}
-                        />
-                      </button>
-
-                      {/* Quick Add */}
-                      <div className="absolute bottom-3 left-3 right-3 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all">
-                        <Button
-                          onClick={() => addToCart(product.id, 1, product.sizes[0], product.colors[0]?.name)}
-                          className="w-full"
-                          size="sm"
-                        >
-                          <ShoppingBag className="h-4 w-4 mr-2" />
-                          Add to Cart
-                        </Button>
-                      </div>
+              <div className="flex items-center gap-4">
+                {/* Mobile Filter Button */}
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="sm" className="lg:hidden">
+                      <SlidersHorizontal className="h-4 w-4 mr-2" />
+                      Filters
+                      {activeFiltersCount > 0 && (
+                        <span className="ml-1 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
+                          {activeFiltersCount}
+                        </span>
+                      )}
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="w-80 overflow-y-auto">
+                    <SheetHeader>
+                      <SheetTitle>Filters</SheetTitle>
+                    </SheetHeader>
+                    <div className="mt-6">
+                      <FilterSidebar />
                     </div>
+                  </SheetContent>
+                </Sheet>
 
-                    <Link to={`/product/${product.id}`}>
-                      <p className="text-xs text-muted-foreground mb-1">{product.category?.name}</p>
-                      <h3 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                        {product.name}
-                      </h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="font-semibold">₹{product.price.toLocaleString()}</span>
-                        {product.compare_at_price && (
-                          <span className="text-sm text-muted-foreground line-through">
-                            ₹{product.compare_at_price.toLocaleString()}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-                  </div>
-                ))}
+                {/* Sort */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground hidden sm:inline">Sort by:</span>
+                  <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
+                    <SelectTrigger className="w-40 sm:w-48 h-9 text-sm">
+                      <SelectValue placeholder="Recommended" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="newest">What's New</SelectItem>
+                      <SelectItem value="price_asc">Price: Low to High</SelectItem>
+                      <SelectItem value="price_desc">Price: High to Low</SelectItem>
+                      <SelectItem value="name">Name</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Grid Toggle (Desktop) */}
+                <div className="hidden lg:flex items-center gap-1 border border-border rounded-md p-1">
+                  <Button
+                    variant={gridCols === 3 ? 'secondary' : 'ghost'}
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => setGridCols(3)}
+                  >
+                    <LayoutGrid className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={gridCols === 4 ? 'secondary' : 'ghost'}
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => setGridCols(4)}
+                  >
+                    <Grid3X3 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Active Filters */}
+            {activeFiltersCount > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {categorySlug && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-sm rounded-full">
+                    {categories?.find(c => c.slug === categorySlug)?.name}
+                    <button onClick={() => setCategorySlug('')}>
+                      <X size={14} />
+                    </button>
+                  </span>
+                )}
+                {priceRange && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-sm rounded-full">
+                    {priceRange}
+                    <button onClick={() => setPriceRange('')}>
+                      <X size={14} />
+                    </button>
+                  </span>
+                )}
               </div>
             )}
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex gap-6">
+            {/* Sidebar (Desktop) */}
+            <aside className="hidden lg:block w-64 flex-shrink-0">
+              <div className="sticky top-24 bg-background p-4 rounded-lg">
+                <FilterSidebar />
+              </div>
+            </aside>
+
+            {/* Products Grid */}
+            <div className="flex-1">
+              {isLoading ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              ) : products?.length === 0 ? (
+                <div className="text-center py-20 bg-background rounded-lg">
+                  <p className="text-muted-foreground text-lg mb-4">No products found</p>
+                  <Button variant="outline" onClick={clearAllFilters}>
+                    Clear All Filters
+                  </Button>
+                </div>
+              ) : (
+                <div className={cn(
+                  "grid gap-4",
+                  gridCols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4",
+                  "grid-cols-2 md:grid-cols-3"
+                )}>
+                  {products?.map((product) => {
+                    const discount = product.compare_at_price
+                      ? Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)
+                      : 0;
+
+                    return (
+                      <div key={product.id} className="product-card group bg-background">
+                        <Link to={`/product/${product.id}`}>
+                          <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                            <img
+                              src={product.images[0] || '/placeholder.svg'}
+                              alt={product.name}
+                              className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                            />
+
+                            {/* Wishlist Button */}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleWishlistToggle(product.id);
+                              }}
+                              className="wishlist-btn"
+                            >
+                              <Heart
+                                size={16}
+                                className={cn(
+                                  "transition-colors",
+                                  isInWishlist(product.id) ? "fill-primary text-primary" : "text-muted-foreground"
+                                )}
+                              />
+                            </button>
+
+                            {/* Rating Badge */}
+                            <div className="absolute bottom-2 left-2 rating-badge">
+                              <span>4.2</span>
+                              <Star size={10} className="fill-current" />
+                              <span className="opacity-75">| 2.3k</span>
+                            </div>
+                          </div>
+                        </Link>
+
+                        <div className="p-3 space-y-1">
+                          <Link to={`/product/${product.id}`}>
+                            <h3 className="brand-name">{product.category?.name || 'VASTRA'}</h3>
+                            <p className="product-name">{product.name}</p>
+                          </Link>
+                          
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="price-current">Rs. {product.price.toLocaleString()}</span>
+                            {product.compare_at_price && (
+                              <>
+                                <span className="price-original">Rs. {product.compare_at_price.toLocaleString()}</span>
+                                <span className="discount-badge">({discount}% OFF)</span>
+                              </>
+                            )}
+                          </div>
+
+                          {product.is_new && (
+                            <p className="text-xs text-myntra-orange font-semibold">NEW ARRIVAL</p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>
