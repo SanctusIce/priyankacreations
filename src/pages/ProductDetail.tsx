@@ -6,8 +6,22 @@ import { useProduct } from '@/hooks/useProducts';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { Button } from '@/components/ui/button';
-import { Loader2, Heart, ShoppingBag, Minus, Plus, Star, Truck, RefreshCw, Shield, ChevronRight } from 'lucide-react';
+import { Loader2, Heart, ShoppingBag, Star, Truck, RefreshCw, Shield, ChevronRight, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+// Import fallback images
+import kurti1 from "@/assets/kurti-1.jpg";
+import kurti2 from "@/assets/kurti-2.jpg";
+import kurti3 from "@/assets/kurti-3.jpg";
+
+const fallbackImages = [kurti1, kurti2, kurti3];
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,7 +32,7 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
-  const [quantity, setQuantity] = useState(1);
+  const [sizeChartOpen, setSizeChartOpen] = useState(false);
 
   React.useEffect(() => {
     if (product) {
@@ -33,7 +47,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product.id, quantity, selectedSize, selectedColor);
+      addToCart(product.id, 1, selectedSize, selectedColor);
     }
   };
 
@@ -44,6 +58,14 @@ const ProductDetail = () => {
     } else {
       addToWishlist(product.id);
     }
+  };
+
+  // Get product images with fallback
+  const getProductImages = () => {
+    if (product?.images && product.images.length > 0 && product.images[0] !== '/placeholder.svg') {
+      return product.images;
+    }
+    return fallbackImages;
   };
 
   if (isLoading) {
@@ -63,8 +85,8 @@ const ProductDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-20 text-center">
-          <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-          <p className="text-muted-foreground mb-8">The product you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold mb-4 font-heading">Product Not Found</h1>
+          <p className="text-muted-foreground mb-8 font-body">The product you are looking for does not exist.</p>
           <Link to="/shop">
             <Button>Continue Shopping</Button>
           </Link>
@@ -78,6 +100,8 @@ const ProductDetail = () => {
     ? Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)
     : 0;
 
+  const productImages = getProductImages();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -86,7 +110,7 @@ const ProductDetail = () => {
         {/* Breadcrumb */}
         <div className="bg-background border-b border-border">
           <div className="container mx-auto px-4 py-3">
-            <nav className="flex items-center gap-2 text-sm">
+            <nav className="flex items-center gap-2 text-sm font-body">
               <Link to="/" className="breadcrumb-link">Home</Link>
               <ChevronRight size={14} className="text-muted-foreground" />
               <Link to="/shop" className="breadcrumb-link">Shop</Link>
@@ -103,9 +127,9 @@ const ProductDetail = () => {
               {/* Thumbnails + Main Image Layout */}
               <div className="flex gap-4">
                 {/* Thumbnails - Vertical */}
-                {product.images.length > 1 && (
+                {productImages.length > 1 && (
                   <div className="hidden sm:flex flex-col gap-3 w-16">
-                    {product.images.map((image, index) => (
+                    {productImages.map((image, index) => (
                       <button
                         key={index}
                         onClick={() => setSelectedImage(index)}
@@ -127,7 +151,7 @@ const ProductDetail = () => {
                 {/* Main Image */}
                 <div className="flex-1 aspect-[3/4] overflow-hidden rounded-lg bg-secondary">
                   <img
-                    src={product.images[selectedImage] || '/placeholder.svg'}
+                    src={productImages[selectedImage] || fallbackImages[0]}
                     alt={product.name}
                     className="w-full h-full object-cover object-top"
                   />
@@ -135,9 +159,9 @@ const ProductDetail = () => {
               </div>
 
               {/* Mobile Thumbnails */}
-              {product.images.length > 1 && (
+              {productImages.length > 1 && (
                 <div className="flex sm:hidden gap-2 overflow-x-auto pb-2">
-                  {product.images.map((image, index) => (
+                  {productImages.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
@@ -161,17 +185,8 @@ const ProductDetail = () => {
             <div className="space-y-6">
               {/* Brand & Category */}
               <div>
-                <p className="text-sm text-muted-foreground">{product.category?.name}</p>
-                <h1 className="text-xl lg:text-2xl font-bold text-foreground mt-1">{product.name}</h1>
-                
-                {/* Rating */}
-                <div className="flex items-center gap-3 mt-3">
-                  <div className="rating-badge">
-                    <span>4.2</span>
-                    <Star size={10} className="fill-current" />
-                  </div>
-                  <span className="text-sm text-muted-foreground">2.3k Ratings</span>
-                </div>
+                <p className="text-sm text-muted-foreground font-body">{product.category?.name}</p>
+                <h1 className="text-xl lg:text-2xl font-bold text-foreground mt-1 font-heading">{product.name}</h1>
               </div>
 
               {/* Divider */}
@@ -179,24 +194,81 @@ const ProductDetail = () => {
 
               {/* Price */}
               <div className="flex items-baseline gap-3 flex-wrap">
-                <span className="text-2xl font-bold text-foreground">Rs. {product.price.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-foreground font-body">₹{product.price.toLocaleString()}</span>
                 {product.compare_at_price && (
                   <>
-                    <span className="text-lg text-muted-foreground line-through">
-                      MRP Rs. {product.compare_at_price.toLocaleString()}
+                    <span className="text-lg text-muted-foreground line-through font-body">
+                      MRP ₹{product.compare_at_price.toLocaleString()}
                     </span>
-                    <span className="text-lg font-bold text-myntra-orange">({discount}% OFF)</span>
+                    <span className="text-lg font-bold text-primary font-body">({discount}% OFF)</span>
                   </>
                 )}
               </div>
-              <p className="text-sm text-success font-semibold">inclusive of all taxes</p>
+              <p className="text-sm text-success font-semibold font-body">inclusive of all taxes</p>
 
               {/* Size Selection */}
               {product.sizes.length > 0 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <label className="text-sm font-bold uppercase">Select Size</label>
-                    <button className="text-sm text-primary font-semibold hover:underline">SIZE CHART</button>
+                    <label className="text-sm font-bold uppercase font-body">Select Size</label>
+                    <Dialog open={sizeChartOpen} onOpenChange={setSizeChartOpen}>
+                      <DialogTrigger asChild>
+                        <button className="text-sm text-primary font-semibold hover:underline font-body">
+                          SIZE CHART
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle className="font-heading text-xl">Size Guide</DialogTitle>
+                        </DialogHeader>
+                        <div className="mt-4">
+                          {/* How to Measure */}
+                          <div className="mb-6">
+                            <h3 className="font-bold text-foreground font-heading mb-3">How to Measure</h3>
+                            <div className="grid grid-cols-3 gap-3 text-sm">
+                              <div className="bg-secondary/50 p-3 rounded">
+                                <p className="font-semibold font-body">Bust</p>
+                                <p className="text-muted-foreground font-body text-xs">Measure around fullest part</p>
+                              </div>
+                              <div className="bg-secondary/50 p-3 rounded">
+                                <p className="font-semibold font-body">Waist</p>
+                                <p className="text-muted-foreground font-body text-xs">Measure at natural waistline</p>
+                              </div>
+                              <div className="bg-secondary/50 p-3 rounded">
+                                <p className="font-semibold font-body">Hips</p>
+                                <p className="text-muted-foreground font-body text-xs">Measure around fullest part</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Size Chart Table */}
+                          <div className="overflow-x-auto">
+                            <table className="w-full border-collapse text-sm">
+                              <thead>
+                                <tr className="bg-secondary">
+                                  <th className="border border-border p-2 text-left font-bold font-body">Size</th>
+                                  <th className="border border-border p-2 text-left font-bold font-body">Bust (in)</th>
+                                  <th className="border border-border p-2 text-left font-bold font-body">Waist (in)</th>
+                                  <th className="border border-border p-2 text-left font-bold font-body">Hip (in)</th>
+                                </tr>
+                              </thead>
+                              <tbody className="font-body text-muted-foreground">
+                                <tr><td className="border border-border p-2 font-semibold text-foreground">XS</td><td className="border border-border p-2">32-34</td><td className="border border-border p-2">26-28</td><td className="border border-border p-2">34-36</td></tr>
+                                <tr className="bg-secondary/30"><td className="border border-border p-2 font-semibold text-foreground">S</td><td className="border border-border p-2">34-36</td><td className="border border-border p-2">28-30</td><td className="border border-border p-2">36-38</td></tr>
+                                <tr><td className="border border-border p-2 font-semibold text-foreground">M</td><td className="border border-border p-2">36-38</td><td className="border border-border p-2">30-32</td><td className="border border-border p-2">38-40</td></tr>
+                                <tr className="bg-secondary/30"><td className="border border-border p-2 font-semibold text-foreground">L</td><td className="border border-border p-2">38-40</td><td className="border border-border p-2">32-34</td><td className="border border-border p-2">40-42</td></tr>
+                                <tr><td className="border border-border p-2 font-semibold text-foreground">XL</td><td className="border border-border p-2">40-42</td><td className="border border-border p-2">34-36</td><td className="border border-border p-2">42-44</td></tr>
+                                <tr className="bg-secondary/30"><td className="border border-border p-2 font-semibold text-foreground">2XL</td><td className="border border-border p-2">42-44</td><td className="border border-border p-2">36-38</td><td className="border border-border p-2">44-46</td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+
+                          <p className="text-xs text-muted-foreground mt-4 font-body">
+                            * If you are between sizes, we recommend going for the larger size for a comfortable fit.
+                          </p>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                   <div className="flex flex-wrap gap-3">
                     {product.sizes.map((size) => (
@@ -218,7 +290,7 @@ const ProductDetail = () => {
               {/* Color Selection */}
               {product.colors.length > 0 && (
                 <div>
-                  <label className="block text-sm font-bold uppercase mb-4">
+                  <label className="block text-sm font-bold uppercase mb-4 font-body">
                     Color: <span className="font-normal text-muted-foreground">{selectedColor}</span>
                   </label>
                   <div className="flex gap-3">
@@ -272,27 +344,27 @@ const ProductDetail = () => {
 
               {/* Delivery & Services */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold uppercase">Delivery Options</h3>
+                <h3 className="text-sm font-bold uppercase font-body">Delivery Options</h3>
                 <div className="grid gap-4">
                   <div className="flex items-start gap-4">
                     <Truck className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
-                      <p className="text-sm font-semibold">Get it by Thu, Dec 26</p>
-                      <p className="text-xs text-muted-foreground">Free delivery on orders above Rs. 499</p>
+                      <p className="text-sm font-semibold font-body">Get it by Thu, Dec 26</p>
+                      <p className="text-xs text-muted-foreground font-body">Free delivery on orders above ₹999</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
                     <RefreshCw className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
-                      <p className="text-sm font-semibold">Easy 14 days returns</p>
-                      <p className="text-xs text-muted-foreground">Change of mind applicable</p>
+                      <p className="text-sm font-semibold font-body">Easy 15 days returns</p>
+                      <p className="text-xs text-muted-foreground font-body">Change of mind applicable</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
                     <Shield className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
-                      <p className="text-sm font-semibold">100% Authentic</p>
-                      <p className="text-xs text-muted-foreground">All products are verified</p>
+                      <p className="text-sm font-semibold font-body">100% Authentic</p>
+                      <p className="text-xs text-muted-foreground font-body">All products are verified</p>
                     </div>
                   </div>
                 </div>
@@ -300,8 +372,8 @@ const ProductDetail = () => {
 
               {/* Product Details */}
               <div className="border-t border-border pt-6">
-                <h3 className="text-sm font-bold uppercase mb-4">Product Details</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
+                <h3 className="text-sm font-bold uppercase mb-4 font-body">Product Details</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed font-body">{product.description}</p>
               </div>
             </div>
           </div>
