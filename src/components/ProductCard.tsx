@@ -1,94 +1,120 @@
-import { Heart, ShoppingBag } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Heart, Star } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
+  id?: string;
   image: string;
   name: string;
+  brand?: string;
   price: number;
   originalPrice?: number;
-  category: string;
+  category?: string;
   isNew?: boolean;
   isSale?: boolean;
+  rating?: number;
+  ratingCount?: number;
 }
 
 const ProductCard = ({
+  id,
   image,
   name,
+  brand = "VASTRA",
   price,
   originalPrice,
   category,
   isNew,
   isSale,
+  rating = 4.2,
+  ratingCount = 128,
 }: ProductCardProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
-  return (
-    <div className="group relative bg-card rounded-lg overflow-hidden shadow-soft hover:shadow-card transition-all duration-300">
+  const discount = originalPrice 
+    ? Math.round(((originalPrice - price) / originalPrice) * 100) 
+    : 0;
+
+  const cardContent = (
+    <div className="product-card group cursor-pointer">
       {/* Image container */}
-      <div className="relative aspect-[3/4] overflow-hidden">
+      <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-secondary animate-pulse" />
+        )}
         <img
           src={image}
           alt={name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className={cn(
+            "w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105",
+            !imageLoaded && "opacity-0"
+          )}
+          onLoad={() => setImageLoaded(true)}
         />
         
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {isNew && (
-            <span className="px-3 py-1 bg-teal text-cream text-xs font-medium rounded">
-              New
-            </span>
-          )}
-          {isSale && (
-            <span className="px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded">
-              Sale
-            </span>
-          )}
-        </div>
-
         {/* Wishlist button */}
         <button
-          onClick={() => setIsWishlisted(!isWishlisted)}
-          className="absolute top-3 right-3 w-9 h-9 bg-card/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-soft hover:scale-110 transition-transform duration-200"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsWishlisted(!isWishlisted);
+          }}
+          className="wishlist-btn"
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
-            size={18}
-            className={isWishlisted ? "fill-primary text-primary" : "text-foreground/60"}
+            size={16}
+            className={cn(
+              "transition-colors",
+              isWishlisted ? "fill-primary text-primary" : "text-muted-foreground"
+            )}
           />
         </button>
 
-        {/* Quick add button */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-          <Button variant="gold" className="w-full gap-2">
-            <ShoppingBag size={16} />
-            Add to Cart
-          </Button>
-        </div>
+        {/* Rating badge */}
+        {rating && (
+          <div className="absolute bottom-2 left-2 rating-badge">
+            <span>{rating.toFixed(1)}</span>
+            <Star size={10} className="fill-current" />
+            <span className="opacity-75">| {ratingCount >= 1000 ? `${(ratingCount/1000).toFixed(1)}k` : ratingCount}</span>
+          </div>
+        )}
       </div>
 
       {/* Content */}
-      <div className="p-4">
-        <span className="text-xs text-muted-foreground uppercase tracking-wide">
-          {category}
-        </span>
-        <h3 className="font-medium text-foreground mt-1 group-hover:text-primary transition-colors">
-          {name}
-        </h3>
-        <div className="flex items-center gap-2 mt-2">
-          <span className="text-lg font-semibold text-foreground">
-            ₹{price.toLocaleString()}
-          </span>
-          {originalPrice && (
-            <span className="text-sm text-muted-foreground line-through">
-              ₹{originalPrice.toLocaleString()}
-            </span>
+      <div className="p-3 space-y-1">
+        {/* Brand */}
+        <h3 className="brand-name">{brand}</h3>
+        
+        {/* Product name */}
+        <p className="product-name">{name}</p>
+        
+        {/* Price */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="price-current">Rs. {price.toLocaleString()}</span>
+          {originalPrice && originalPrice > price && (
+            <>
+              <span className="price-original">Rs. {originalPrice.toLocaleString()}</span>
+              <span className="discount-badge">({discount}% OFF)</span>
+            </>
           )}
         </div>
+
+        {/* New tag */}
+        {isNew && (
+          <p className="text-xs text-myntra-orange font-semibold mt-1">NEW ARRIVAL</p>
+        )}
       </div>
     </div>
   );
+
+  if (id) {
+    return <Link to={`/product/${id}`}>{cardContent}</Link>;
+  }
+
+  return cardContent;
 };
 
 export default ProductCard;

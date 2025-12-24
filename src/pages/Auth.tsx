@@ -9,7 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { z } from 'zod';
 
 const loginSchema = z.object({
@@ -33,6 +33,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+  const [showPassword, setShowPassword] = useState(false);
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
@@ -141,7 +142,6 @@ const Auth = () => {
         toast.error(error.message);
       }
     } else {
-      // Send welcome email
       try {
         await supabase.functions.invoke('send-welcome-email', {
           body: { email: signupEmail, fullName: signupName },
@@ -150,56 +150,55 @@ const Auth = () => {
         console.log('Welcome email error:', emailError);
       }
       
-      toast.success('Account created successfully! Welcome to Vastra.');
+      toast.success('Account created successfully!');
       navigate('/');
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-secondary/30 flex flex-col">
       {/* Header */}
-      <header className="border-b border-border">
-        <div className="container mx-auto px-4 py-4">
+      <header className="bg-background border-b border-border">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" />
-            <span>Back to Store</span>
+            <span className="text-sm font-medium">Back</span>
           </Link>
+          <Link to="/">
+            <h1 className="font-heading text-2xl font-bold text-primary">Vastra</h1>
+          </Link>
+          <div className="w-16" /> {/* Spacer for centering */}
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-4">
+      <main className="flex-1 flex items-center justify-center p-4 py-12">
         <div className="w-full max-w-md">
-          {/* Logo */}
-          <div className="text-center mb-8">
-            <Link to="/">
-              <h1 className="font-heading text-4xl font-bold text-primary">Vastra</h1>
-              <p className="text-muted-foreground mt-2">Elegance in Every Thread</p>
-            </Link>
-          </div>
-
-          <Card className="shadow-card">
+          <Card className="shadow-lg border-0">
             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'login' | 'signup')}>
-              <CardHeader className="pb-4">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">Login</TabsTrigger>
-                  <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <CardHeader className="pb-0">
+                <h2 className="text-xl font-bold text-center mb-4">
+                  {activeTab === 'login' ? 'Login' : 'Sign Up'}
+                </h2>
+                <TabsList className="grid w-full grid-cols-2 h-12">
+                  <TabsTrigger value="login" className="font-semibold">Login</TabsTrigger>
+                  <TabsTrigger value="signup" className="font-semibold">Sign Up</TabsTrigger>
                 </TabsList>
               </CardHeader>
 
-              <CardContent>
+              <CardContent className="pt-6">
                 {/* Google Sign In */}
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full mb-4"
+                  className="w-full h-12 border-2 font-semibold"
                   onClick={handleGoogleSignIn}
                   disabled={googleLoading}
                 >
                   {googleLoading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   ) : (
-                    <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+                    <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
                       <path
                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                         fill="#4285F4"
@@ -221,17 +220,17 @@ const Auth = () => {
                   Continue with Google
                 </Button>
 
-                <div className="relative mb-4">
+                <div className="relative my-6">
                   <Separator />
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-                    or
+                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-4 text-sm text-muted-foreground">
+                    OR
                   </span>
                 </div>
 
                 <TabsContent value="login" className="mt-0">
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="login-email">Email</Label>
+                      <Label htmlFor="login-email" className="text-sm font-semibold">Email Address</Label>
                       <Input
                         id="login-email"
                         type="email"
@@ -239,6 +238,7 @@ const Auth = () => {
                         value={loginEmail}
                         onChange={(e) => setLoginEmail(e.target.value)}
                         disabled={loading}
+                        className="h-12"
                       />
                       {loginErrors.email && (
                         <p className="text-sm text-destructive">{loginErrors.email}</p>
@@ -246,28 +246,38 @@ const Auth = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="login-password">Password</Label>
-                      <Input
-                        id="login-password"
-                        type="password"
-                        placeholder="Enter your password"
-                        value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
-                        disabled={loading}
-                      />
+                      <Label htmlFor="login-password" className="text-sm font-semibold">Password</Label>
+                      <div className="relative">
+                        <Input
+                          id="login-password"
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="Enter your password"
+                          value={loginPassword}
+                          onChange={(e) => setLoginPassword(e.target.value)}
+                          disabled={loading}
+                          className="h-12 pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                        >
+                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
                       {loginErrors.password && (
                         <p className="text-sm text-destructive">{loginErrors.password}</p>
                       )}
                     </div>
 
-                    <Button type="submit" className="w-full" disabled={loading}>
+                    <Button type="submit" className="w-full h-12 font-bold" disabled={loading}>
                       {loading ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                           Logging in...
                         </>
                       ) : (
-                        'Login'
+                        'LOGIN'
                       )}
                     </Button>
                   </form>
@@ -276,7 +286,7 @@ const Auth = () => {
                 <TabsContent value="signup" className="mt-0">
                   <form onSubmit={handleSignup} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signup-name">Full Name</Label>
+                      <Label htmlFor="signup-name" className="text-sm font-semibold">Full Name</Label>
                       <Input
                         id="signup-name"
                         type="text"
@@ -284,6 +294,7 @@ const Auth = () => {
                         value={signupName}
                         onChange={(e) => setSignupName(e.target.value)}
                         disabled={loading}
+                        className="h-12"
                       />
                       {signupErrors.fullName && (
                         <p className="text-sm text-destructive">{signupErrors.fullName}</p>
@@ -291,7 +302,7 @@ const Auth = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-email">Email</Label>
+                      <Label htmlFor="signup-email" className="text-sm font-semibold">Email Address</Label>
                       <Input
                         id="signup-email"
                         type="email"
@@ -299,6 +310,7 @@ const Auth = () => {
                         value={signupEmail}
                         onChange={(e) => setSignupEmail(e.target.value)}
                         disabled={loading}
+                        className="h-12"
                       />
                       {signupErrors.email && (
                         <p className="text-sm text-destructive">{signupErrors.email}</p>
@@ -306,7 +318,7 @@ const Auth = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-password">Password</Label>
+                      <Label htmlFor="signup-password" className="text-sm font-semibold">Password</Label>
                       <Input
                         id="signup-password"
                         type="password"
@@ -314,6 +326,7 @@ const Auth = () => {
                         value={signupPassword}
                         onChange={(e) => setSignupPassword(e.target.value)}
                         disabled={loading}
+                        className="h-12"
                       />
                       {signupErrors.password && (
                         <p className="text-sm text-destructive">{signupErrors.password}</p>
@@ -321,7 +334,7 @@ const Auth = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="signup-confirm-password">Confirm Password</Label>
+                      <Label htmlFor="signup-confirm-password" className="text-sm font-semibold">Confirm Password</Label>
                       <Input
                         id="signup-confirm-password"
                         type="password"
@@ -329,20 +342,21 @@ const Auth = () => {
                         value={signupConfirmPassword}
                         onChange={(e) => setSignupConfirmPassword(e.target.value)}
                         disabled={loading}
+                        className="h-12"
                       />
                       {signupErrors.confirmPassword && (
                         <p className="text-sm text-destructive">{signupErrors.confirmPassword}</p>
                       )}
                     </div>
 
-                    <Button type="submit" className="w-full" disabled={loading}>
+                    <Button type="submit" className="w-full h-12 font-bold" disabled={loading}>
                       {loading ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                           Creating account...
                         </>
                       ) : (
-                        'Create Account'
+                        'CREATE ACCOUNT'
                       )}
                     </Button>
                   </form>
@@ -350,8 +364,8 @@ const Auth = () => {
               </CardContent>
 
               <CardFooter className="flex flex-col space-y-4 pt-0">
-                <p className="text-xs text-center text-muted-foreground">
-                  By continuing, you agree to our Terms of Service and Privacy Policy.
+                <p className="text-xs text-center text-muted-foreground px-4">
+                  By continuing, you agree to our Terms of Use and Privacy Policy.
                 </p>
               </CardFooter>
             </Tabs>
