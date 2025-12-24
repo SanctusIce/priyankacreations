@@ -1,20 +1,20 @@
 import { Link } from "react-router-dom";
 import { Truck, RotateCcw, Shield, Headphones } from "lucide-react";
+import promo1 from "@/assets/promo-1.jpg";
+import promo2 from "@/assets/promo-2.jpg";
 
 const banners = [
   {
     title: "Festive Collection",
     subtitle: "Up to 40% Off",
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&h=400&fit=crop",
+    image: promo1,
     link: "/shop?category=festive",
-    bgColor: "from-pink-100 to-pink-50"
   },
   {
     title: "New Season Arrivals",
     subtitle: "Fresh Styles",
-    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=800&h=400&fit=crop",
+    image: promo2,
     link: "/shop?sort=newest",
-    bgColor: "from-amber-100 to-amber-50"
   }
 ];
 
@@ -27,7 +27,7 @@ const features = [
   {
     icon: RotateCcw,
     title: "Easy Returns",
-    description: "14 day return policy"
+    description: "15 day return policy"
   },
   {
     icon: Shield,
@@ -61,13 +61,13 @@ const PromoBanners = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 to-transparent" />
                 <div className="absolute inset-0 p-6 lg:p-8 flex flex-col justify-center">
-                  <p className="text-sm font-semibold text-primary-foreground/80 uppercase tracking-wide">
+                  <p className="text-sm font-semibold text-primary-foreground/80 uppercase tracking-wide font-body">
                     {banner.subtitle}
                   </p>
-                  <h3 className="text-2xl lg:text-3xl font-bold text-primary-foreground mt-1">
+                  <h3 className="text-2xl lg:text-3xl font-bold text-primary-foreground mt-1 font-heading">
                     {banner.title}
                   </h3>
-                  <span className="mt-4 inline-flex items-center text-sm font-semibold text-primary-foreground group-hover:underline">
+                  <span className="mt-4 inline-flex items-center text-sm font-semibold text-primary-foreground group-hover:underline font-body">
                     Shop Now →
                   </span>
                 </div>
@@ -87,8 +87,8 @@ const PromoBanners = () => {
                   <feature.icon className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-foreground">{feature.title}</h4>
-                  <p className="text-xs text-muted-foreground">{feature.description}</p>
+                  <h4 className="font-bold text-sm text-foreground font-body">{feature.title}</h4>
+                  <p className="text-xs text-muted-foreground font-body">{feature.description}</p>
                 </div>
               </div>
             ))}
