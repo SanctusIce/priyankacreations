@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
+import hero2 from "@/assets/hero-2.jpg";
+import hero3 from "@/assets/hero-3.jpg";
 
 const slides = [
   {
@@ -15,7 +17,7 @@ const slides = [
     link: "/shop"
   },
   {
-    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=1920&h=1080&fit=crop",
+    image: hero2,
     subtitle: "Festive Season",
     title: "Celebrate Every",
     titleHighlight: "Moment",
@@ -24,7 +26,7 @@ const slides = [
     link: "/shop?category=festive"
   },
   {
-    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=1920&h=1080&fit=crop",
+    image: hero3,
     subtitle: "Modern Comfort",
     title: "Effortless",
     titleHighlight: "Grace",

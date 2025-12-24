@@ -1,28 +1,32 @@
 import { Link } from "react-router-dom";
+import categoryEthnic from "@/assets/category-ethnic.jpg";
+import categoryWestern from "@/assets/category-western.jpg";
+import categoryFestive from "@/assets/category-festive.jpg";
+import categoryParty from "@/assets/category-party.jpg";
 
 const categories = [
   {
     name: "Ethnic Wear",
     description: "Traditional elegance",
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=500&fit=crop",
+    image: categoryEthnic,
     link: "/shop?category=ethnic"
   },
   {
     name: "Western Wear",
     description: "Modern & stylish",
-    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop",
+    image: categoryWestern,
     link: "/shop?category=western"
   },
   {
     name: "Festive Collection",
     description: "Celebrate in style",
-    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=400&h=500&fit=crop",
+    image: categoryFestive,
     link: "/shop?category=festive"
   },
   {
     name: "Party Wear",
     description: "For special occasions",
-    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=500&fit=crop",
+    image: categoryParty,
     link: "/shop?category=party"
   },
 ];

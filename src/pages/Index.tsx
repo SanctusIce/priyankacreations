@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Categories from "@/components/Categories";
 import FeaturedProducts from "@/components/FeaturedProducts";
+import Testimonials from "@/components/Testimonials";
 import PromoBanners from "@/components/PromoBanners";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
@@ -24,6 +25,7 @@ const Index = () => {
         <Hero />
         <Categories />
         <FeaturedProducts />
+        <Testimonials />
         <PromoBanners />
         <Newsletter />
       </main>
