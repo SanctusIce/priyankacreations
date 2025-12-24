@@ -4,12 +4,9 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useProducts, useCategories } from '@/hooks/useProducts';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Search, SlidersHorizontal, ChevronDown, ChevronUp, Grid3X3, LayoutGrid, Loader2, Heart, Star, X } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
+import { SlidersHorizontal, ChevronDown, ChevronUp, Grid3X3, LayoutGrid, Loader2, Heart, X } from 'lucide-react';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { cn } from '@/lib/utils';
 import {
@@ -25,8 +22,19 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
+// Import kurti images for fallback
+import kurti1 from "@/assets/kurti-1.jpg";
+import kurti2 from "@/assets/kurti-2.jpg";
+import kurti3 from "@/assets/kurti-3.jpg";
+import kurti4 from "@/assets/kurti-4.jpg";
+import kurti5 from "@/assets/kurti-5.jpg";
+import kurti6 from "@/assets/kurti-6.jpg";
+import kurti7 from "@/assets/kurti-7.jpg";
+import kurti8 from "@/assets/kurti-8.jpg";
+
+const fallbackImages = [kurti1, kurti2, kurti3, kurti4, kurti5, kurti6, kurti7, kurti8];
+
 const Shop = () => {
-  const [search, setSearch] = useState('');
   const [categorySlug, setCategorySlug] = useState<string>('');
   const [sortBy, setSortBy] = useState<'newest' | 'price_asc' | 'price_desc' | 'name'>('newest');
   const [priceRange, setPriceRange] = useState<string>('');
@@ -47,7 +55,6 @@ const Shop = () => {
   const selectedPriceRange = priceRanges.find(p => p.label === priceRange);
 
   const { data: products, isLoading } = useProducts({
-    search,
     categorySlug: categorySlug || undefined,
     sortBy,
     minPrice: selectedPriceRange?.min || 0,
@@ -55,7 +62,6 @@ const Shop = () => {
   });
 
   const { data: categories } = useCategories();
-  const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
   const handleWishlistToggle = (productId: string) => {
@@ -75,13 +81,20 @@ const Shop = () => {
   const clearAllFilters = () => {
     setCategorySlug('');
     setPriceRange('');
-    setSearch('');
+  };
+
+  // Get fallback image based on product index
+  const getProductImage = (product: any, index: number) => {
+    if (product.images && product.images[0] && product.images[0] !== '/placeholder.svg') {
+      return product.images[0];
+    }
+    return fallbackImages[index % fallbackImages.length];
   };
 
   const FilterSection = ({ title, filterKey, children }: { title: string; filterKey: string; children: React.ReactNode }) => (
     <Collapsible open={openFilters[filterKey]} onOpenChange={() => toggleFilter(filterKey)}>
       <CollapsibleTrigger className="flex items-center justify-between w-full py-4 border-b border-border">
-        <span className="text-sm font-bold uppercase tracking-wide">{title}</span>
+        <span className="text-sm font-bold uppercase tracking-wide font-body">{title}</span>
         {openFilters[filterKey] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
       </CollapsibleTrigger>
       <CollapsibleContent className="py-4">
@@ -94,11 +107,11 @@ const Shop = () => {
     <div className="space-y-0">
       {/* Filters Header */}
       <div className="flex items-center justify-between pb-4 border-b border-border">
-        <span className="text-sm font-bold uppercase tracking-wide">Filters</span>
+        <span className="text-sm font-bold uppercase tracking-wide font-body">Filters</span>
         {activeFiltersCount > 0 && (
           <button 
             onClick={clearAllFilters}
-            className="text-sm text-primary font-semibold hover:underline"
+            className="text-sm text-primary font-semibold hover:underline font-body"
           >
             CLEAR ALL
           </button>
@@ -113,7 +126,7 @@ const Shop = () => {
               checked={categorySlug === ''}
               onCheckedChange={() => setCategorySlug('')}
             />
-            <span>All Products</span>
+            <span className="font-body">All Products</span>
           </label>
           {categories?.map((category) => (
             <label key={category.id} className="filter-item">
@@ -121,7 +134,7 @@ const Shop = () => {
                 checked={categorySlug === category.slug}
                 onCheckedChange={() => setCategorySlug(category.slug)}
               />
-              <span>{category.name}</span>
+              <span className="font-body">{category.name}</span>
             </label>
           ))}
         </div>
@@ -136,7 +149,7 @@ const Shop = () => {
                 checked={priceRange === range.label}
                 onCheckedChange={() => setPriceRange(priceRange === range.label ? '' : range.label)}
               />
-              <span>{range.label}</span>
+              <span className="font-body">{range.label}</span>
             </label>
           ))}
         </div>
@@ -152,7 +165,7 @@ const Shop = () => {
         {/* Breadcrumb */}
         <div className="bg-background border-b border-border">
           <div className="container mx-auto px-4 py-3">
-            <nav className="flex items-center gap-2 text-sm">
+            <nav className="flex items-center gap-2 text-sm font-body">
               <Link to="/" className="breadcrumb-link">Home</Link>
               <span className="text-muted-foreground">/</span>
               <span className="text-foreground font-medium">Shop All</span>
@@ -165,9 +178,9 @@ const Shop = () => {
           <div className="container mx-auto px-4 py-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <h1 className="text-xl font-bold text-foreground">
+                <h1 className="text-xl font-bold text-foreground font-heading">
                   {categorySlug ? categories?.find(c => c.slug === categorySlug)?.name : 'All Products'}
-                  <span className="text-muted-foreground font-normal ml-2">
+                  <span className="text-muted-foreground font-normal ml-2 font-body">
                     - {products?.length || 0} items
                   </span>
                 </h1>
@@ -189,7 +202,7 @@ const Shop = () => {
                   </SheetTrigger>
                   <SheetContent side="left" className="w-80 overflow-y-auto">
                     <SheetHeader>
-                      <SheetTitle>Filters</SheetTitle>
+                      <SheetTitle className="font-heading">Filters</SheetTitle>
                     </SheetHeader>
                     <div className="mt-6">
                       <FilterSidebar />
@@ -199,13 +212,13 @@ const Shop = () => {
 
                 {/* Sort */}
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground hidden sm:inline">Sort by:</span>
+                  <span className="text-sm text-muted-foreground hidden sm:inline font-body">Sort by:</span>
                   <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
                     <SelectTrigger className="w-40 sm:w-48 h-9 text-sm">
                       <SelectValue placeholder="Recommended" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="newest">What's New</SelectItem>
+                      <SelectItem value="newest">What&apos;s New</SelectItem>
                       <SelectItem value="price_asc">Price: Low to High</SelectItem>
                       <SelectItem value="price_desc">Price: High to Low</SelectItem>
                       <SelectItem value="name">Name</SelectItem>
@@ -239,7 +252,7 @@ const Shop = () => {
             {activeFiltersCount > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
                 {categorySlug && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-sm rounded-full">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-sm rounded-full font-body">
                     {categories?.find(c => c.slug === categorySlug)?.name}
                     <button onClick={() => setCategorySlug('')}>
                       <X size={14} />
@@ -247,7 +260,7 @@ const Shop = () => {
                   </span>
                 )}
                 {priceRange && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-sm rounded-full">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-sm rounded-full font-body">
                     {priceRange}
                     <button onClick={() => setPriceRange('')}>
                       <X size={14} />
@@ -276,7 +289,7 @@ const Shop = () => {
                 </div>
               ) : products?.length === 0 ? (
                 <div className="text-center py-20 bg-background rounded-lg">
-                  <p className="text-muted-foreground text-lg mb-4">No products found</p>
+                  <p className="text-muted-foreground text-lg mb-4 font-body">No products found</p>
                   <Button variant="outline" onClick={clearAllFilters}>
                     Clear All Filters
                   </Button>
@@ -287,17 +300,19 @@ const Shop = () => {
                   gridCols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4",
                   "grid-cols-2 md:grid-cols-3"
                 )}>
-                  {products?.map((product) => {
+                  {products?.map((product, index) => {
                     const discount = product.compare_at_price
                       ? Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)
                       : 0;
+
+                    const productImage = getProductImage(product, index);
 
                     return (
                       <div key={product.id} className="product-card group bg-background">
                         <Link to={`/product/${product.id}`}>
                           <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
                             <img
-                              src={product.images[0] || '/placeholder.svg'}
+                              src={productImage}
                               alt={product.name}
                               className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                             />
@@ -319,12 +334,12 @@ const Shop = () => {
                               />
                             </button>
 
-                            {/* Rating Badge */}
-                            <div className="absolute bottom-2 left-2 rating-badge">
-                              <span>4.2</span>
-                              <Star size={10} className="fill-current" />
-                              <span className="opacity-75">| 2.3k</span>
-                            </div>
+                            {/* Sale Badge */}
+                            {discount > 0 && (
+                              <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded font-body">
+                                {discount}% OFF
+                              </div>
+                            )}
                           </div>
                         </Link>
 
@@ -334,19 +349,12 @@ const Shop = () => {
                             <p className="product-name">{product.name}</p>
                           </Link>
                           
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="price-current">Rs. {product.price.toLocaleString()}</span>
+                          <div className="flex items-center gap-2 flex-wrap pt-1">
+                            <span className="price-current">₹{product.price.toLocaleString()}</span>
                             {product.compare_at_price && (
-                              <>
-                                <span className="price-original">Rs. {product.compare_at_price.toLocaleString()}</span>
-                                <span className="discount-badge">({discount}% OFF)</span>
-                              </>
+                              <span className="price-original">₹{product.compare_at_price.toLocaleString()}</span>
                             )}
                           </div>
-
-                          {product.is_new && (
-                            <p className="text-xs text-myntra-orange font-semibold">NEW ARRIVAL</p>
-                          )}
                         </div>
                       </div>
                     );
