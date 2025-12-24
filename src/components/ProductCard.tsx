@@ -1,7 +1,10 @@
-import { Heart, Star } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   id?: string;
@@ -13,8 +16,6 @@ interface ProductCardProps {
   category?: string;
   isNew?: boolean;
   isSale?: boolean;
-  rating?: number;
-  ratingCount?: number;
 }
 
 const ProductCard = ({
@@ -27,15 +28,35 @@ const ProductCard = ({
   category,
   isNew,
   isSale,
-  rating = 4.2,
-  ratingCount = 128,
 }: ProductCardProps) => {
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  
+  const isWishlisted = id ? isInWishlist(id) : false;
 
   const discount = originalPrice 
     ? Math.round(((originalPrice - price) / originalPrice) * 100) 
     : 0;
+
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+    
+    if (!id) return;
+    
+    if (isWishlisted) {
+      removeFromWishlist(id);
+    } else {
+      addToWishlist(id);
+    }
+  };
 
   const cardContent = (
     <div className="product-card group cursor-pointer">
@@ -56,11 +77,7 @@ const ProductCard = ({
         
         {/* Wishlist button */}
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setIsWishlisted(!isWishlisted);
-          }}
+          onClick={handleWishlistClick}
           className="wishlist-btn"
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
@@ -73,12 +90,10 @@ const ProductCard = ({
           />
         </button>
 
-        {/* Rating badge */}
-        {rating && (
-          <div className="absolute bottom-2 left-2 rating-badge">
-            <span>{rating.toFixed(1)}</span>
-            <Star size={10} className="fill-current" />
-            <span className="opacity-75">| {ratingCount >= 1000 ? `${(ratingCount/1000).toFixed(1)}k` : ratingCount}</span>
+        {/* Sale badge */}
+        {discount > 0 && (
+          <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded">
+            {discount}% OFF
           </div>
         )}
       </div>
@@ -92,20 +107,12 @@ const ProductCard = ({
         <p className="product-name">{name}</p>
         
         {/* Price */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="price-current">Rs. {price.toLocaleString()}</span>
+        <div className="flex items-center gap-2 flex-wrap pt-1">
+          <span className="price-current">₹{price.toLocaleString()}</span>
           {originalPrice && originalPrice > price && (
-            <>
-              <span className="price-original">Rs. {originalPrice.toLocaleString()}</span>
-              <span className="discount-badge">({discount}% OFF)</span>
-            </>
+            <span className="price-original">₹{originalPrice.toLocaleString()}</span>
           )}
         </div>
-
-        {/* New tag */}
-        {isNew && (
-          <p className="text-xs text-myntra-orange font-semibold mt-1">NEW ARRIVAL</p>
-        )}
       </div>
     </div>
   );

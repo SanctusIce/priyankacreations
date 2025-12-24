@@ -17,9 +17,8 @@ import {
 const navLinks = [
   { name: "Ethnic Wear", href: "/shop?category=ethnic" },
   { name: "Western Wear", href: "/shop?category=western" },
-  { name: "Kurtis", href: "/shop?category=kurtis" },
-  { name: "Dresses", href: "/shop?category=dresses" },
-  { name: "Sale", href: "/sale", badge: "🔥" },
+  { name: "Festive", href: "/shop?category=festive" },
+  { name: "Sale", href: "/sale", badge: "✨" },
 ];
 
 const Header = () => {
@@ -48,7 +47,7 @@ const Header = () => {
       <div className="container mx-auto px-4">
         {/* Top bar - Promotional */}
         <div className="hidden lg:flex items-center justify-center py-2 text-sm bg-primary text-primary-foreground -mx-4 px-4">
-          <span className="font-medium">✨ FREE SHIPPING on orders above ₹999 | Use code FIRST15 for 15% off</span>
+          <span className="font-medium">Free Shipping on orders above ₹999 | Use code FIRST15 for 15% off</span>
         </div>
 
         {/* Main header */}
@@ -93,7 +92,7 @@ const Header = () => {
             <div className="relative w-full">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
-                placeholder="Search for kurtis, dresses, ethnic wear and more..."
+                placeholder="Search for ethnic wear, western wear, dresses..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-12 pr-4 bg-secondary border-none h-11 text-sm rounded-full w-full"

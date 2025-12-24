@@ -7,30 +7,30 @@ import heroImage from "@/assets/hero-image.jpg";
 const slides = [
   {
     image: heroImage,
-    subtitle: "New Collection 2025",
-    title: "Ethnic Elegance",
-    titleHighlight: "Redefined",
-    description: "Discover our exquisite collection of handcrafted Indian ethnic wear. From elegant kurtis to stunning sets.",
-    cta: "Shop Collection",
+    subtitle: "Timeless Elegance",
+    title: "Handcrafted",
+    titleHighlight: "with Love",
+    description: "Discover our exquisite collection of handcrafted Indian ethnic wear, designed for the modern woman who celebrates tradition.",
+    cta: "Explore Collection",
     link: "/shop"
   },
   {
     image: "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=1920&h=1080&fit=crop",
     subtitle: "Festive Season",
-    title: "Celebrate in",
-    titleHighlight: "Style",
-    description: "Get ready for the festive season with our stunning collection of designer wear and accessories.",
-    cta: "Explore Festive",
+    title: "Celebrate Every",
+    titleHighlight: "Moment",
+    description: "Embrace the joy of festivals with our stunning collection of designer ethnic wear and accessories.",
+    cta: "Shop Festive",
     link: "/shop?category=festive"
   },
   {
     image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=1920&h=1080&fit=crop",
-    subtitle: "Up to 50% Off",
-    title: "Season's Biggest",
-    titleHighlight: "Sale",
-    description: "Don't miss out on amazing deals across all categories. Limited time offer!",
-    cta: "Shop Sale",
-    link: "/sale"
+    subtitle: "Modern Comfort",
+    title: "Effortless",
+    titleHighlight: "Grace",
+    description: "Contemporary designs meet traditional craftsmanship in our exclusive collection.",
+    cta: "Discover More",
+    link: "/shop?category=ethnic"
   }
 ];
 
@@ -91,7 +91,7 @@ const Hero = () => {
           <div className="container mx-auto px-4 h-full flex items-center relative z-10">
             <div className="max-w-xl">
               <span 
-                className={`inline-block text-sm font-semibold text-primary tracking-widest uppercase mb-4 transition-all duration-500 ${
+                className={`inline-block text-sm font-semibold text-primary tracking-widest uppercase mb-4 transition-all duration-500 font-body ${
                   index === currentSlide ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
                 style={{ transitionDelay: "200ms" }}
@@ -100,7 +100,7 @@ const Hero = () => {
               </span>
               
               <h1 
-                className={`text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 transition-all duration-500 ${
+                className={`text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 transition-all duration-500 font-heading ${
                   index === currentSlide ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
                 style={{ transitionDelay: "300ms" }}
@@ -110,7 +110,7 @@ const Hero = () => {
               </h1>
               
               <p 
-                className={`text-base lg:text-lg text-muted-foreground max-w-md mb-8 transition-all duration-500 ${
+                className={`text-base lg:text-lg text-muted-foreground max-w-md mb-8 transition-all duration-500 font-body ${
                   index === currentSlide ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
                 style={{ transitionDelay: "400ms" }}

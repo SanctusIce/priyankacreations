@@ -1,57 +1,42 @@
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
-import product3 from "@/assets/product-3.jpg";
-import product4 from "@/assets/product-4.jpg";
 
 const products = [
   {
     id: "1",
-    image: product1,
-    name: "Teal Embroidered Kurti",
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=500&fit=crop",
+    name: "Maroon Embroidered A-Line Kurta",
     brand: "VASTRA",
-    price: 1899,
-    originalPrice: 2499,
-    category: "Kurtis",
-    isNew: true,
-    rating: 4.3,
-    ratingCount: 2156,
+    price: 2499,
+    originalPrice: 3299,
+    category: "Ethnic Wear",
   },
   {
     id: "2",
-    image: product2,
-    name: "Maroon Palazzo Pants",
+    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=400&h=500&fit=crop",
+    name: "Teal Cotton Straight Kurta",
     brand: "VASTRA",
-    price: 1299,
-    originalPrice: 1799,
-    category: "Pants",
-    isNew: true,
-    rating: 4.1,
-    ratingCount: 892,
+    price: 1899,
+    originalPrice: 2499,
+    category: "Ethnic Wear",
   },
   {
     id: "3",
-    image: product3,
-    name: "Pink Anarkali Set",
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop",
+    name: "Pink Chanderi Silk Anarkali",
     brand: "VASTRA",
     price: 3999,
     originalPrice: 4999,
-    category: "Sets",
-    rating: 4.5,
-    ratingCount: 3241,
+    category: "Festive Wear",
   },
   {
     id: "4",
-    image: product4,
-    name: "Navy Straight Kurti",
+    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=500&fit=crop",
+    name: "Navy Blue Printed Kurta Set",
     brand: "VASTRA",
-    price: 1599,
-    originalPrice: 2199,
-    category: "Kurtis",
-    isNew: true,
-    rating: 4.2,
-    ratingCount: 1567,
+    price: 2799,
+    originalPrice: 3599,
+    category: "Ethnic Wear",
   },
 ];
 
@@ -61,16 +46,16 @@ const FeaturedProducts = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10">
           <div>
-            <span className="text-sm font-semibold text-primary tracking-widest uppercase">
-              Trending Now
+            <span className="text-sm font-semibold text-primary tracking-widest uppercase font-body">
+              Curated For You
             </span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-2">
-              New Arrivals
+            <h2 className="text-2xl lg:text-4xl font-bold text-foreground mt-2 font-heading">
+              Featured Collection
             </h2>
           </div>
           <Link
             to="/shop?sort=newest"
-            className="text-sm font-semibold text-primary hover:underline"
+            className="text-sm font-semibold text-primary hover:underline font-body"
           >
             View All Products →
           </Link>
