@@ -86,9 +86,9 @@ const products = [
 
 const FeaturedProducts = () => {
   return (
-    <section className="py-12 lg:py-20">
+    <section className="py-12 lg:py-20 overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10 animate-fade-in">
           <div>
             <span className="text-sm font-semibold text-primary tracking-widest uppercase font-body">
               Curated For You
@@ -99,9 +99,10 @@ const FeaturedProducts = () => {
           </div>
           <Link
             to="/shop?sort=newest"
-            className="text-sm font-semibold text-primary hover:underline font-body"
+            className="text-sm font-semibold text-primary hover:underline font-body group inline-flex items-center gap-1"
           >
-            View All Products →
+            View All Products 
+            <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
           </Link>
         </div>
 
@@ -109,8 +110,11 @@ const FeaturedProducts = () => {
           {products.map((product, index) => (
             <div
               key={product.id}
-              className="animate-fade-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="opacity-0 animate-fade-in"
+              style={{ 
+                animationDelay: `${index * 100}ms`,
+                animationFillMode: 'forwards'
+              }}
             >
               <ProductCard {...product} />
             </div>
