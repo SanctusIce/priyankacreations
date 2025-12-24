@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import type { Json } from '@/integrations/supabase/types';
 
 export interface OrderItem {
   id: string;
@@ -139,8 +140,8 @@ export const useCreateOrder = () => {
           discount_amount: input.discount_amount || 0,
           shipping_cost: input.shipping_cost || 0,
           total: input.total,
-          shipping_address: input.shipping_address as unknown as Record<string, unknown>,
-          billing_address: input.billing_address as unknown as Record<string, unknown>,
+          shipping_address: JSON.parse(JSON.stringify(input.shipping_address)) as Json,
+          billing_address: input.billing_address ? JSON.parse(JSON.stringify(input.billing_address)) as Json : null,
           payment_method: input.payment_method,
           coupon_code: input.coupon_code,
         }])
