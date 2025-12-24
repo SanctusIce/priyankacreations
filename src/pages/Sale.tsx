@@ -3,13 +3,18 @@ import { Link } from 'react-router-dom';
 import { useProducts } from '@/hooks/useProducts';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import ProductCard from '@/components/ProductCard';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Timer, Flame, Sparkles, TrendingDown } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Timer, Flame, Sparkles, TrendingDown, Heart, ShoppingBag } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
+import { toast } from 'sonner';
 
 const Sale = () => {
   const { data: products, isLoading } = useProducts();
+  const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
     minutes: 59,
@@ -37,13 +42,25 @@ const Sale = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const handleAddToCart = async (productId: string) => {
+    await addToCart(productId, 1);
+  };
+
+  const handleWishlistToggle = async (productId: string) => {
+    if (isInWishlist(productId)) {
+      await removeFromWishlist(productId);
+    } else {
+      await addToWishlist(productId);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       {/* Hero Banner */}
-      <section className="relative bg-gradient-to-r from-primary via-primary to-maroon-light overflow-hidden">
-        <div className="absolute inset-0 opacity-50" />
+      <section className="relative bg-gradient-to-r from-primary via-primary to-primary/80 overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-gradient-to-br from-accent to-transparent" />
         
         <div className="container mx-auto px-4 py-16 relative z-10">
           <div className="text-center text-primary-foreground">
@@ -140,9 +157,73 @@ const Sale = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {saleProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {saleProducts.map((product) => {
+              const discount = product.compare_at_price 
+                ? Math.round((1 - product.price / product.compare_at_price) * 100) 
+                : 0;
+              
+              return (
+                <Card key={product.id} className="group overflow-hidden">
+                  <div className="relative aspect-[3/4] overflow-hidden">
+                    <Link to={`/product/${product.id}`}>
+                      <img
+                        src={product.images?.[0] || '/placeholder.svg'}
+                        alt={product.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </Link>
+                    
+                    {/* Discount Badge */}
+                    <div className="absolute top-2 left-2 bg-destructive text-destructive-foreground px-2 py-1 text-xs font-bold rounded">
+                      {discount}% OFF
+                    </div>
+                    
+                    {/* Wishlist Button */}
+                    <button
+                      onClick={() => handleWishlistToggle(product.id)}
+                      className="absolute top-2 right-2 w-9 h-9 bg-card/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-soft hover:scale-110 transition-transform"
+                    >
+                      <Heart
+                        className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-primary text-primary' : 'text-foreground/60'}`}
+                      />
+                    </button>
+                    
+                    {/* Quick Add */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                      <Button 
+                        variant="gold" 
+                        className="w-full gap-2"
+                        onClick={() => handleAddToCart(product.id)}
+                      >
+                        <ShoppingBag className="h-4 w-4" />
+                        Add to Cart
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <CardContent className="p-4">
+                    <Link to={`/product/${product.id}`}>
+                      <h3 className="font-medium text-foreground hover:text-primary transition-colors line-clamp-2">
+                        {product.name}
+                      </h3>
+                    </Link>
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="font-heading text-lg font-bold text-primary">
+                        ₹{product.price.toLocaleString()}
+                      </span>
+                      {product.compare_at_price && (
+                        <span className="text-sm text-muted-foreground line-through">
+                          ₹{product.compare_at_price.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                    <Badge variant="outline" className="mt-2 text-green-600 border-green-600">
+                      Save ₹{((product.compare_at_price || 0) - product.price).toLocaleString()}
+                    </Badge>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </main>

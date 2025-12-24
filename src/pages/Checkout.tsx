@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
-import { useAddresses, useCreateAddress } from '@/hooks/useAddresses';
+import { useAddresses, useCreateAddress, Address } from '@/hooks/useAddresses';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -28,7 +28,7 @@ const addressSchema = z.object({
 const Checkout = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { cartItems, cartTotal, clearCart } = useCart();
+  const { items: cartItems, cartTotal, clearCart } = useCart();
   const { data: addresses, isLoading: addressesLoading } = useAddresses();
   const createAddress = useCreateAddress();
 
@@ -114,8 +114,8 @@ const Checkout = () => {
 
     createAddress.mutate({
       ...newAddress,
-      user_id: user!.id,
-      is_default: addresses?.length === 0,
+      address_line2: newAddress.address_line2 || null,
+      is_default: !addresses || addresses.length === 0,
       address_type: 'shipping',
       country: 'India',
     }, {
@@ -181,11 +181,11 @@ const Checkout = () => {
       const orderItems = cartItems.map(item => ({
         order_id: order.id,
         product_id: item.product_id,
-        product_name: item.products?.name || '',
-        product_image: item.products?.images?.[0] || null,
+        product_name: item.product?.name || '',
+        product_image: item.product?.images?.[0] || null,
         quantity: item.quantity,
-        unit_price: item.products?.price || 0,
-        total_price: (item.products?.price || 0) * item.quantity,
+        unit_price: item.product?.price || 0,
+        total_price: (item.product?.price || 0) * item.quantity,
         size: item.selected_size,
         color: item.selected_color,
       }));
@@ -432,18 +432,18 @@ const Checkout = () => {
                   {cartItems.map((item) => (
                     <div key={item.id} className="flex gap-3">
                       <img
-                        src={item.products?.images?.[0] || '/placeholder.svg'}
-                        alt={item.products?.name}
+                        src={item.product?.images?.[0] || '/placeholder.svg'}
+                        alt={item.product?.name}
                         className="w-16 h-20 object-cover rounded"
                       />
                       <div className="flex-1">
-                        <p className="font-medium text-sm line-clamp-1">{item.products?.name}</p>
+                        <p className="font-medium text-sm line-clamp-1">{item.product?.name}</p>
                         <p className="text-xs text-muted-foreground">
                           {item.selected_size && `Size: ${item.selected_size}`}
                           {item.selected_color && ` | Color: ${item.selected_color}`}
                         </p>
                         <p className="text-sm">
-                          ₹{item.products?.price} × {item.quantity}
+                          ₹{item.product?.price} × {item.quantity}
                         </p>
                       </div>
                     </div>

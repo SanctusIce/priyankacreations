@@ -12,19 +12,18 @@ import { toast } from 'sonner';
 
 const Wishlist = () => {
   const { user } = useAuth();
-  const { wishlistItems, removeFromWishlist, loading } = useWishlist();
+  const { items: wishlistItems, removeFromWishlist, loading } = useWishlist();
   const { addToCart } = useCart();
 
   const handleAddToCart = async (item: any) => {
-    if (item.products) {
-      await addToCart(item.products.id, 1);
+    if (item.product) {
+      await addToCart(item.product.id, 1);
       toast.success('Added to cart!');
     }
   };
 
   const handleRemove = async (productId: string) => {
     await removeFromWishlist(productId);
-    toast.success('Removed from wishlist');
   };
 
   if (!user) {
@@ -85,8 +84,8 @@ const Wishlist = () => {
               <Card key={item.id} className="group overflow-hidden">
                 <div className="relative aspect-[3/4] overflow-hidden">
                   <img
-                    src={item.products?.images?.[0] || '/placeholder.svg'}
-                    alt={item.products?.name}
+                    src={item.product?.images?.[0] || '/placeholder.svg'}
+                    alt={item.product?.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <Button
@@ -97,25 +96,25 @@ const Wishlist = () => {
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
-                  {item.products?.compare_at_price && (
+                  {item.product?.compare_at_price && (
                     <div className="absolute top-2 left-2 bg-destructive text-destructive-foreground px-2 py-1 text-xs font-medium rounded">
-                      {Math.round((1 - item.products.price / item.products.compare_at_price) * 100)}% OFF
+                      {Math.round((1 - item.product.price / item.product.compare_at_price) * 100)}% OFF
                     </div>
                   )}
                 </div>
                 <CardContent className="p-4">
                   <Link to={`/product/${item.product_id}`}>
                     <h3 className="font-medium text-foreground hover:text-primary transition-colors line-clamp-2">
-                      {item.products?.name}
+                      {item.product?.name}
                     </h3>
                   </Link>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="font-heading text-lg font-bold text-primary">
-                      ₹{item.products?.price?.toLocaleString()}
+                      ₹{item.product?.price?.toLocaleString()}
                     </span>
-                    {item.products?.compare_at_price && (
+                    {item.product?.compare_at_price && (
                       <span className="text-sm text-muted-foreground line-through">
-                        ₹{item.products.compare_at_price.toLocaleString()}
+                        ₹{item.product.compare_at_price.toLocaleString()}
                       </span>
                     )}
                   </div>
