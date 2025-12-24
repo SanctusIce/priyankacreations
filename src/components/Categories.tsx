@@ -1,49 +1,51 @@
+import { Link } from "react-router-dom";
+
 const categories = [
   {
     name: "Kurtis",
     description: "Elegant everyday wear",
     image: "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=400&h=500&fit=crop",
-    count: "120+ Styles"
+    link: "/shop?category=kurtis"
   },
   {
-    name: "Palazzo Pants",
+    name: "Palazzo Sets",
     description: "Comfortable & stylish",
     image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop",
-    count: "80+ Styles"
+    link: "/shop?category=palazzo"
   },
   {
-    name: "Kurti Sets",
-    description: "Complete the look",
+    name: "Ethnic Wear",
+    description: "Traditional elegance",
     image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=500&fit=crop",
-    count: "60+ Sets"
+    link: "/shop?category=ethnic"
   },
   {
-    name: "Ethnic Dresses",
+    name: "Party Wear",
     description: "For special occasions",
     image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=500&fit=crop",
-    count: "45+ Designs"
+    link: "/shop?category=party"
   },
 ];
 
 const Categories = () => {
   return (
-    <section className="py-16 md:py-24 bg-secondary/30">
+    <section className="py-12 lg:py-20 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <span className="text-sm font-medium text-gold-dark tracking-widest uppercase">
+        <div className="text-center mb-10">
+          <span className="text-sm font-semibold text-primary tracking-widest uppercase">
             Browse By
           </span>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-foreground mt-2">
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-2">
             Shop Categories
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {categories.map((category, index) => (
-            <a
+            <Link
               key={category.name}
-              href={`#${category.name.toLowerCase().replace(' ', '-')}`}
-              className="group relative overflow-hidden rounded-lg aspect-[3/4] animate-fade-up shadow-soft hover:shadow-card transition-all duration-300"
+              to={category.link}
+              className="group relative overflow-hidden rounded-lg aspect-[3/4] animate-fade-up"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Image */}
@@ -57,21 +59,18 @@ const Categories = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
               
               {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                <h3 className="text-lg md:text-xl font-heading font-semibold text-cream mb-1">
+              <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6">
+                <h3 className="text-lg lg:text-xl font-bold text-background mb-1">
                   {category.name}
                 </h3>
-                <p className="text-sm text-cream/80 mb-2 hidden md:block">
+                <p className="text-sm text-background/80 hidden lg:block">
                   {category.description}
                 </p>
-                <span className="text-xs text-gold-light font-medium">
-                  {category.count}
-                </span>
               </div>
 
               {/* Hover border */}
-              <div className="absolute inset-0 border-2 border-gold opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
-            </a>
+              <div className="absolute inset-0 border-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+            </Link>
           ))}
         </div>
       </div>
