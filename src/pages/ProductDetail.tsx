@@ -6,7 +6,7 @@ import { useProduct } from '@/hooks/useProducts';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { Button } from '@/components/ui/button';
-import { Loader2, Heart, ShoppingBag, Star, Truck, RefreshCw, Shield, ChevronRight, X } from 'lucide-react';
+import { Loader2, Heart, ShoppingBag, Star, Truck, RefreshCw, Shield, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Dialog,
@@ -15,13 +15,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 // Import fallback images
 import kurti1 from "@/assets/kurti-1.jpg";
 import kurti2 from "@/assets/kurti-2.jpg";
 import kurti3 from "@/assets/kurti-3.jpg";
+import kurti4 from "@/assets/kurti-4.jpg";
+import kurti5 from "@/assets/kurti-5.jpg";
 
-const fallbackImages = [kurti1, kurti2, kurti3];
+const fallbackImages = [kurti1, kurti2, kurti3, kurti4, kurti5];
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -122,52 +131,52 @@ const ProductDetail = () => {
 
         <div className="container mx-auto px-4 py-6">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Images */}
+            {/* Images with Carousel */}
             <div className="space-y-4">
-              {/* Thumbnails + Main Image Layout */}
-              <div className="flex gap-4">
-                {/* Thumbnails - Vertical */}
-                {productImages.length > 1 && (
-                  <div className="hidden sm:flex flex-col gap-3 w-16">
+              {/* Main Image Carousel */}
+              <div className="relative">
+                <Carousel className="w-full" opts={{ loop: true }}>
+                  <CarouselContent>
                     {productImages.map((image, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setSelectedImage(index)}
-                        className={cn(
-                          "aspect-[3/4] rounded overflow-hidden border-2 transition-all",
-                          selectedImage === index ? "border-primary" : "border-transparent hover:border-muted-foreground"
-                        )}
-                      >
-                        <img
-                          src={image}
-                          alt={`${product.name} ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
+                      <CarouselItem key={index}>
+                        <div className="aspect-[3/4] overflow-hidden rounded-lg bg-secondary">
+                          <img
+                            src={image}
+                            alt={`${product.name} ${index + 1}`}
+                            className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
+                          />
+                        </div>
+                      </CarouselItem>
                     ))}
+                  </CarouselContent>
+                  {productImages.length > 1 && (
+                    <>
+                      <CarouselPrevious className="left-2 bg-background/80 backdrop-blur-sm hover:bg-background" />
+                      <CarouselNext className="right-2 bg-background/80 backdrop-blur-sm hover:bg-background" />
+                    </>
+                  )}
+                </Carousel>
+
+                {/* Image Counter Badge */}
+                {productImages.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+                    {productImages.length} Images
                   </div>
                 )}
-
-                {/* Main Image */}
-                <div className="flex-1 aspect-[3/4] overflow-hidden rounded-lg bg-secondary">
-                  <img
-                    src={productImages[selectedImage] || fallbackImages[0]}
-                    alt={product.name}
-                    className="w-full h-full object-cover object-top"
-                  />
-                </div>
               </div>
 
-              {/* Mobile Thumbnails */}
+              {/* Thumbnails Strip */}
               {productImages.length > 1 && (
-                <div className="flex sm:hidden gap-2 overflow-x-auto pb-2">
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                   {productImages.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
                       className={cn(
-                        "flex-shrink-0 w-16 h-20 rounded overflow-hidden border-2 transition-all",
-                        selectedImage === index ? "border-primary" : "border-transparent"
+                        "flex-shrink-0 w-16 h-20 rounded-md overflow-hidden border-2 transition-all duration-300",
+                        selectedImage === index 
+                          ? "border-primary ring-2 ring-primary/20" 
+                          : "border-transparent hover:border-muted-foreground opacity-70 hover:opacity-100"
                       )}
                     >
                       <img
