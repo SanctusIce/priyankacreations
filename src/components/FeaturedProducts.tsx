@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
+import kurti1 from "@/assets/kurti-1.jpg";
+import kurti2 from "@/assets/kurti-2.jpg";
+import kurti3 from "@/assets/kurti-3.jpg";
+import kurti4 from "@/assets/kurti-4.jpg";
+import kurti5 from "@/assets/kurti-5.jpg";
+import kurti6 from "@/assets/kurti-6.jpg";
+import kurti7 from "@/assets/kurti-7.jpg";
+import kurti8 from "@/assets/kurti-8.jpg";
 
 const products = [
   {
     id: "1",
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=500&fit=crop",
+    image: kurti1,
     name: "Maroon Embroidered A-Line Kurta",
     brand: "VASTRA",
     price: 2499,
@@ -13,7 +21,7 @@ const products = [
   },
   {
     id: "2",
-    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=400&h=500&fit=crop",
+    image: kurti2,
     name: "Teal Cotton Straight Kurta",
     brand: "VASTRA",
     price: 1899,
@@ -22,7 +30,7 @@ const products = [
   },
   {
     id: "3",
-    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop",
+    image: kurti3,
     name: "Pink Chanderi Silk Anarkali",
     brand: "VASTRA",
     price: 3999,
@@ -31,12 +39,48 @@ const products = [
   },
   {
     id: "4",
-    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=500&fit=crop",
+    image: kurti4,
     name: "Navy Blue Printed Kurta Set",
     brand: "VASTRA",
     price: 2799,
     originalPrice: 3599,
     category: "Ethnic Wear",
+  },
+  {
+    id: "5",
+    image: kurti5,
+    name: "Rust Orange Bandhani Kurta",
+    brand: "VASTRA",
+    price: 2199,
+    originalPrice: 2899,
+    category: "Ethnic Wear",
+  },
+  {
+    id: "6",
+    image: kurti6,
+    name: "Olive Green Palazzo Set",
+    brand: "VASTRA",
+    price: 3299,
+    originalPrice: 4199,
+    category: "Festive Wear",
+  },
+  {
+    id: "7",
+    image: kurti7,
+    name: "Mustard Yellow Printed Kurti",
+    brand: "VASTRA",
+    price: 1599,
+    originalPrice: 2099,
+    category: "Casual Wear",
+  },
+  {
+    id: "8",
+    image: kurti8,
+    name: "Beige Chikankari Kurta Set",
+    brand: "VASTRA",
+    price: 3599,
+    originalPrice: 4599,
+    category: "Festive Wear",
   },
 ];
 
