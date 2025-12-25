@@ -203,7 +203,7 @@ const TrackOrder = () => {
               </p>
               <div className="text-sm text-muted-foreground space-y-1">
                 <p>• Make sure you entered the correct order number</p>
-                <p>• Order numbers start with "ORD-"</p>
+                <p>• Order numbers start with "VAS-"</p>
                 <p>• Check your email for your order confirmation</p>
               </div>
             </div>
