@@ -90,16 +90,16 @@ const FeaturedProducts = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10 animate-fade-in">
           <div>
-            <span className="text-sm font-semibold text-primary tracking-widest uppercase font-body">
+            <span className="text-sm font-semibold text-primary tracking-widest uppercase">
               Curated For You
             </span>
-            <h2 className="text-2xl lg:text-4xl font-bold text-foreground mt-2 font-heading">
+            <h2 className="text-2xl lg:text-4xl font-bold text-foreground mt-2">
               Featured Collection
             </h2>
           </div>
           <Link
-            to="/shop?sort=newest"
-            className="text-sm font-semibold text-primary hover:underline font-body group inline-flex items-center gap-1"
+            to="/shop"
+            className="text-sm font-semibold text-primary hover:underline group inline-flex items-center gap-1"
           >
             View All Products 
             <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
