@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.send-newsletter-welcome]
 verify_jwt = false
+
+[functions.shopping-assistant]
+verify_jwt = false
