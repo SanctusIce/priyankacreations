@@ -31,6 +31,7 @@ import TrackOrder from "./pages/TrackOrder";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
 import AdminOrders from "./pages/admin/AdminOrders";
+import AdminUsers from "./pages/admin/AdminUsers";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -72,6 +73,7 @@ const App = () => (
                 <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>
                   <Route path="products" element={<AdminProducts />} />
                   <Route path="orders" element={<AdminOrders />} />
+                  <Route path="users" element={<AdminUsers />} />
                 </Route>
                 
                 <Route path="*" element={<NotFound />} />
