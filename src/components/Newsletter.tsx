@@ -41,20 +41,14 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="py-16 lg:py-24 bg-primary text-primary-foreground overflow-hidden relative">
-      {/* Decorative animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/4 w-96 h-96 bg-primary-foreground/5 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-1/2 -right-1/4 w-96 h-96 bg-primary-foreground/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-      </div>
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-2xl mx-auto text-center animate-fade-in">
-          <h2 className="text-2xl lg:text-3xl font-bold mb-4">
-            Join the Vastra Family
-          </h2>
-          <p className="text-primary-foreground/80 mb-8">
+    <section className="py-10 lg:py-14 bg-primary">
+      <div className="container mx-auto px-4">
+        <div className="max-w-xl mx-auto text-center">
+          <h2 className="text-lg lg:text-xl font-bold text-primary-foreground mb-2">
             Subscribe to get exclusive offers, new arrivals & insider-only discounts
+          </h2>
+          <p className="text-sm text-primary-foreground/70 mb-6">
+            By subscribing, you agree to receive marketing emails. Unsubscribe anytime.
           </p>
           
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
@@ -63,23 +57,19 @@ const Newsletter = () => {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12 bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 flex-1 transition-all duration-300 focus:bg-primary-foreground/15 focus:scale-[1.02]"
+              className="h-11 bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50 flex-1 rounded-sm"
               required
             />
             <Button 
               type="submit" 
-              variant="secondary"
+              variant="outline"
               size="lg"
-              className="h-12 px-8 font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              className="h-11 px-6 font-semibold bg-background text-foreground hover:bg-background/90 border-0 rounded-sm"
               disabled={loading}
             >
-              {loading ? "Subscribing..." : "Subscribe"}
+              {loading ? "..." : "Subscribe"}
             </Button>
           </form>
-          
-          <p className="text-xs text-primary-foreground/60 mt-4">
-            By subscribing, you agree to receive marketing emails. Unsubscribe anytime.
-          </p>
         </div>
       </div>
     </section>

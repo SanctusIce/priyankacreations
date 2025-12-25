@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import ProductCard from "./ProductCard";
 import kurti1 from "@/assets/kurti-1.jpg";
 import kurti2 from "@/assets/kurti-2.jpg";
 import kurti3 from "@/assets/kurti-3.jpg";
 import kurti4 from "@/assets/kurti-4.jpg";
-import kurti5 from "@/assets/kurti-5.jpg";
-import kurti6 from "@/assets/kurti-6.jpg";
-import kurti7 from "@/assets/kurti-7.jpg";
-import kurti8 from "@/assets/kurti-8.jpg";
 
 const products = [
   {
@@ -31,7 +28,7 @@ const products = [
   {
     id: "3",
     image: kurti3,
-    name: "Pink Chanderi Silk Anarkali",
+    name: "Blue Checkered Shirt Suit",
     brand: "VASTRA",
     price: 3999,
     originalPrice: 4999,
@@ -46,67 +43,31 @@ const products = [
     originalPrice: 3599,
     category: "Ethnic Wear",
   },
-  {
-    id: "5",
-    image: kurti5,
-    name: "Rust Orange Bandhani Kurta",
-    brand: "VASTRA",
-    price: 2199,
-    originalPrice: 2899,
-    category: "Ethnic Wear",
-  },
-  {
-    id: "6",
-    image: kurti6,
-    name: "Olive Green Palazzo Set",
-    brand: "VASTRA",
-    price: 3299,
-    originalPrice: 4199,
-    category: "Festive Wear",
-  },
-  {
-    id: "7",
-    image: kurti7,
-    name: "Mustard Yellow Printed Kurti",
-    brand: "VASTRA",
-    price: 1599,
-    originalPrice: 2099,
-    category: "Casual Wear",
-  },
-  {
-    id: "8",
-    image: kurti8,
-    name: "Beige Chikankari Kurta Set",
-    brand: "VASTRA",
-    price: 3599,
-    originalPrice: 4599,
-    category: "Festive Wear",
-  },
 ];
 
 const FeaturedProducts = () => {
   return (
-    <section className="py-12 lg:py-20 overflow-hidden">
+    <section className="py-12 lg:py-16 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10 animate-fade-in">
+        <div className="flex items-end justify-between gap-4 mb-8">
           <div>
-            <span className="text-sm font-semibold text-primary tracking-widest uppercase">
+            <span className="text-xs font-medium text-primary tracking-[0.2em] uppercase">
               Curated For You
             </span>
-            <h2 className="text-2xl lg:text-4xl font-bold text-foreground mt-2">
+            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">
               Featured Collection
             </h2>
           </div>
           <Link
             to="/shop"
-            className="text-sm font-semibold text-primary hover:underline group inline-flex items-center gap-1"
+            className="text-sm font-medium text-primary hover:underline inline-flex items-center gap-1 group"
           >
             View All Products 
-            <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+            <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
           {products.map((product, index) => (
             <div
               key={product.id}

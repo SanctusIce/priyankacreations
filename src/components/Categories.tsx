@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import categoryEthnic from "@/assets/category-ethnic.jpg";
 import categoryWestern from "@/assets/category-western.jpg";
 import categoryFestive from "@/assets/category-festive.jpg";
@@ -7,25 +8,21 @@ import categoryParty from "@/assets/category-party.jpg";
 const categories = [
   {
     name: "Ethnic Wear",
-    description: "Traditional elegance",
     image: categoryEthnic,
     link: "/ethnic-wear"
   },
   {
     name: "Western Wear",
-    description: "Modern & stylish",
     image: categoryWestern,
     link: "/western-wear"
   },
   {
     name: "Festive Collection",
-    description: "Celebrate in style",
     image: categoryFestive,
     link: "/shop?category=festive"
   },
   {
     name: "Party Wear",
-    description: "For special occasions",
     image: categoryParty,
     link: "/shop?category=party"
   },
@@ -33,25 +30,25 @@ const categories = [
 
 const Categories = () => {
   return (
-    <section className="py-12 lg:py-20 bg-secondary/30 overflow-hidden">
+    <section className="py-12 lg:py-16 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-10 animate-fade-in">
-          <span className="text-sm font-semibold text-primary tracking-widest uppercase">
+        <div className="text-center mb-8">
+          <span className="text-xs font-medium text-muted-foreground tracking-[0.2em] uppercase">
             Browse By
           </span>
-          <h2 className="text-2xl lg:text-4xl font-bold text-foreground mt-2">
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-2">
             Shop Categories
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
           {categories.map((category, index) => (
             <Link
               key={category.name}
               to={category.link}
-              className="group relative overflow-hidden rounded-lg aspect-[3/4] opacity-0 animate-scale-in"
+              className="group relative overflow-hidden rounded-lg aspect-square opacity-0 animate-scale-in"
               style={{ 
-                animationDelay: `${index * 150}ms`,
+                animationDelay: `${index * 100}ms`,
                 animationFillMode: 'forwards'
               }}
             >
@@ -59,24 +56,23 @@ const Categories = () => {
               <img
                 src={category.image}
                 alt={category.name}
-                className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent transition-opacity duration-300 group-hover:opacity-90" />
+              {/* Subtle overlay at bottom */}
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/50 via-transparent to-transparent" />
               
               {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6 transform transition-transform duration-300 group-hover:translate-y-[-8px]">
-                <h3 className="text-lg lg:text-xl font-bold text-background mb-1">
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <h3 className="text-base lg:text-lg font-semibold text-background">
                   {category.name}
                 </h3>
-                <p className="text-sm text-background/80 hidden lg:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  {category.description}
-                </p>
               </div>
 
-              {/* Hover border with glow */}
-              <div className="absolute inset-0 border-2 border-primary opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-lg shadow-[0_0_20px_rgba(var(--primary),0.3)]" />
+              {/* Arrow icon on hover */}
+              <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-background/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <ArrowRight size={14} className="text-foreground" />
+              </div>
             </Link>
           ))}
         </div>
