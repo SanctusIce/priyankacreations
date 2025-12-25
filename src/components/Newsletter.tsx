@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const emailSchema = z.string().trim().email({ message: "Please enter a valid email address" }).max(255);
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
@@ -9,14 +13,31 @@ const Newsletter = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    
+    // Validate email
+    const validation = emailSchema.safeParse(email);
+    if (!validation.success) {
+      toast.error(validation.error.errors[0].message);
+      return;
+    }
     
     setLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setLoading(false);
-    setEmail("");
-    toast.success("Thank you for subscribing! 🎉");
+    
+    try {
+      const { error } = await supabase.functions.invoke('send-newsletter-welcome', {
+        body: { email: validation.data }
+      });
+      
+      if (error) throw error;
+      
+      setEmail("");
+      toast.success("Welcome to Vastra! Check your inbox for a special discount 🎉");
+    } catch (error: any) {
+      console.error('Newsletter signup error:', error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
