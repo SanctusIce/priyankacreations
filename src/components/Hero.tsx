@@ -9,29 +9,32 @@ import hero3 from "@/assets/hero-3.jpg";
 const slides = [
   {
     image: heroImage,
-    subtitle: "Timeless Elegance",
+    subtitle: "FESTIVE SEASON",
+    title: "Celebrate Every",
+    titleHighlight: "Moment",
+    description: "Embrace the joy of festivals with our stunning collection of designer ethnic wear and accessories handcrafted for you.",
+    cta: "Shop Festive",
+    ctaSecondary: "View All",
+    link: "/shop?category=festive"
+  },
+  {
+    image: hero2,
+    subtitle: "TIMELESS ELEGANCE",
     title: "Handcrafted",
     titleHighlight: "with Love",
     description: "Discover our exquisite collection of handcrafted Indian ethnic wear, designed for the modern woman who celebrates tradition.",
     cta: "Explore Collection",
+    ctaSecondary: "View All",
     link: "/shop"
   },
   {
-    image: hero2,
-    subtitle: "Festive Season",
-    title: "Celebrate Every",
-    titleHighlight: "Moment",
-    description: "Embrace the joy of festivals with our stunning collection of designer ethnic wear and accessories.",
-    cta: "Shop Festive",
-    link: "/shop?category=festive"
-  },
-  {
     image: hero3,
-    subtitle: "Modern Comfort",
+    subtitle: "MODERN COMFORT",
     title: "Effortless",
     titleHighlight: "Grace",
     description: "Contemporary designs meet traditional craftsmanship in our exclusive collection.",
     cta: "Discover More",
+    ctaSecondary: "View All",
     link: "/shop?category=ethnic"
   }
 ];
@@ -69,7 +72,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative h-[85vh] lg:h-screen overflow-hidden">
+    <section className="relative h-[70vh] lg:h-[85vh] overflow-hidden">
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
@@ -85,15 +88,15 @@ const Hero = () => {
               alt={slide.title}
               className="w-full h-full object-cover object-center"
             />
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent" />
+            {/* Gradient overlay - stronger on left for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 via-foreground/30 to-transparent" />
           </div>
 
           {/* Content */}
           <div className="container mx-auto px-4 h-full flex items-center relative z-10">
-            <div className="max-w-xl">
+            <div className="max-w-lg">
               <span 
-                className={`inline-block text-sm font-semibold text-primary tracking-widest uppercase mb-4 transition-all duration-500 ${
+                className={`inline-block text-xs font-semibold text-background/80 tracking-[0.2em] uppercase mb-3 transition-all duration-500 ${
                   index === currentSlide ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
                 style={{ transitionDelay: "200ms" }}
@@ -102,17 +105,18 @@ const Hero = () => {
               </span>
               
               <h1 
-                className={`text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 transition-all duration-500 ${
+                className={`text-3xl md:text-4xl lg:text-5xl font-bold text-background leading-tight mb-4 transition-all duration-500 ${
                   index === currentSlide ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
                 style={{ transitionDelay: "300ms" }}
               >
-                {slide.title}{" "}
+                {slide.title}
+                <br />
                 <span className="text-primary">{slide.titleHighlight}</span>
               </h1>
               
               <p 
-                className={`text-base lg:text-lg text-muted-foreground max-w-md mb-8 transition-all duration-500 ${
+                className={`text-sm lg:text-base text-background/80 max-w-md mb-6 leading-relaxed transition-all duration-500 ${
                   index === currentSlide ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
                 style={{ transitionDelay: "400ms" }}
@@ -121,19 +125,23 @@ const Hero = () => {
               </p>
 
               <div 
-                className={`flex flex-col sm:flex-row gap-4 transition-all duration-500 ${
+                className={`flex flex-wrap gap-3 transition-all duration-500 ${
                   index === currentSlide ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
                 style={{ transitionDelay: "500ms" }}
               >
                 <Link to={slide.link}>
-                  <Button size="lg" className="h-12 px-8 font-bold text-base">
+                  <Button size="lg" className="h-11 px-6 font-semibold text-sm rounded-sm">
                     {slide.cta}
                   </Button>
                 </Link>
                 <Link to="/shop">
-                  <Button variant="outline" size="lg" className="h-12 px-8 font-bold text-base border-2">
-                    View All
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="h-11 px-6 font-semibold text-sm border-background text-background hover:bg-background hover:text-foreground rounded-sm"
+                  >
+                    {slide.ctaSecondary}
                   </Button>
                 </Link>
               </div>
@@ -145,29 +153,29 @@ const Hero = () => {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center text-foreground hover:bg-background transition-colors shadow-lg"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-background/20 backdrop-blur-sm flex items-center justify-center text-background hover:bg-background/40 transition-colors"
         aria-label="Previous slide"
       >
-        <ChevronLeft size={24} />
+        <ChevronLeft size={20} />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center text-foreground hover:bg-background transition-colors shadow-lg"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-background/20 backdrop-blur-sm flex items-center justify-center text-background hover:bg-background/40 transition-colors"
         aria-label="Next slide"
       >
-        <ChevronRight size={24} />
+        <ChevronRight size={20} />
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
               index === currentSlide 
-                ? "bg-primary w-8" 
-                : "bg-foreground/30 hover:bg-foreground/50"
+                ? "bg-background w-6" 
+                : "bg-background/50 hover:bg-background/70"
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

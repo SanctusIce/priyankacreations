@@ -5,38 +5,38 @@ const testimonials = [
   {
     id: 1,
     name: "Priya Sharma",
-    location: "Mumbai",
+    location: "CLOTHS • 1 WEEK AGO",
     rating: 5,
     text: "Absolutely love the quality and craftsmanship! The maroon kurta I ordered fits perfectly and the embroidery is stunning. Will definitely order again.",
-    product: "Maroon Embroidered A-Line Kurta",
-    date: "2 weeks ago"
+    product: "PURCHASED: MAROON EMBROIDERED A-LINE KURTA",
+    avatar: "P"
   },
   {
     id: 2,
     name: "Ananya Reddy",
-    location: "Bangalore",
+    location: "CLOTHS • 2 WEEKS AGO",
     rating: 5,
     text: "Fast delivery and excellent packaging. The fabric quality exceeded my expectations. The customer service team was very helpful with sizing.",
-    product: "Pink Chanderi Silk Anarkali",
-    date: "1 month ago"
+    product: "PURCHASED: PINK CHANDERI SILK ANARKALI",
+    avatar: "A"
   },
   {
     id: 3,
     name: "Meera Patel",
-    location: "Ahmedabad",
+    location: "CLOTHS • 3 WEEKS AGO",
     rating: 5,
     text: "I have been looking for authentic ethnic wear online and Vastra is a gem! The colors are exactly as shown and the fit is true to size.",
-    product: "Teal Cotton Straight Kurta",
-    date: "3 weeks ago"
+    product: "PURCHASED: TEAL COTTON STRAIGHT KURTA",
+    avatar: "M"
   },
   {
     id: 4,
     name: "Kavitha Nair",
-    location: "Chennai",
+    location: "CLOTHS • 1 MONTH AGO",
     rating: 5,
     text: "Received so many compliments at my cousin's wedding! The palazzo set was comfortable to wear all day and looked absolutely gorgeous.",
-    product: "Olive Green Palazzo Set",
-    date: "1 week ago"
+    product: "PURCHASED: OLIVE GREEN PALAZZO SET",
+    avatar: "K"
   },
 ];
 
@@ -52,112 +52,93 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-16 lg:py-24 bg-secondary/30">
+    <section className="py-12 lg:py-16 bg-background">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12">
-          <span className="text-sm font-semibold text-primary tracking-widest uppercase font-body">
+        <div className="text-center mb-8">
+          <span className="text-xs font-medium text-primary tracking-[0.2em] uppercase">
             Customer Love
           </span>
-          <h2 className="text-2xl lg:text-4xl font-bold text-foreground mt-2 font-heading">
+          <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-2">
             What Our Customers Say
           </h2>
         </div>
 
         {/* Testimonials Carousel */}
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative max-w-2xl mx-auto">
           {/* Quote Icon */}
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-primary flex items-center justify-center z-10">
-            <Quote className="w-5 h-5 text-primary-foreground fill-primary-foreground" />
+          <div className="flex justify-center mb-6">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <Quote className="w-4 h-4 text-primary fill-primary" />
+            </div>
           </div>
 
-          {/* Main Card */}
-          <div className="bg-card rounded-2xl shadow-lg p-8 lg:p-12 pt-12">
-            <div className="text-center">
-              {/* Stars */}
-              <div className="flex justify-center gap-1 mb-6">
-                {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-accent fill-accent" />
-                ))}
-              </div>
+          {/* Stars */}
+          <div className="flex justify-center gap-1 mb-4">
+            {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
+              <Star key={i} className="w-4 h-4 text-accent fill-accent" />
+            ))}
+          </div>
 
-              {/* Testimonial Text */}
-              <blockquote className="text-lg lg:text-xl text-foreground leading-relaxed mb-8 font-body">
-                "{testimonials[currentIndex].text}"
-              </blockquote>
+          {/* Testimonial Text */}
+          <blockquote className="text-center text-base lg:text-lg text-foreground leading-relaxed mb-6 italic px-4">
+            "{testimonials[currentIndex].text}"
+          </blockquote>
 
-              {/* Product Purchased */}
-              <p className="text-sm text-primary font-semibold mb-4 font-body">
-                Purchased: {testimonials[currentIndex].product}
+          {/* Product Purchased */}
+          <p className="text-center text-xs text-primary font-semibold tracking-wide mb-4">
+            {testimonials[currentIndex].product}
+          </p>
+
+          {/* Customer Info */}
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="text-sm font-bold text-primary">
+                {testimonials[currentIndex].avatar}
+              </span>
+            </div>
+            <div className="text-left">
+              <p className="font-semibold text-sm text-foreground">
+                {testimonials[currentIndex].name}
               </p>
-
-              {/* Customer Info */}
-              <div className="flex items-center justify-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-lg font-bold text-primary font-heading">
-                    {testimonials[currentIndex].name.charAt(0)}
-                  </span>
-                </div>
-                <div className="text-left">
-                  <p className="font-semibold text-foreground font-body">
-                    {testimonials[currentIndex].name}
-                  </p>
-                  <p className="text-sm text-muted-foreground font-body">
-                    {testimonials[currentIndex].location} • {testimonials[currentIndex].date}
-                  </p>
-                </div>
-              </div>
+              <p className="text-xs text-muted-foreground">
+                {testimonials[currentIndex].location}
+              </p>
             </div>
           </div>
 
           {/* Navigation Arrows */}
           <button
             onClick={prevTestimonial}
-            className="absolute left-0 lg:-left-6 top-1/2 -translate-y-1/2 w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-background shadow-md flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+            className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={18} />
           </button>
           <button
             onClick={nextTestimonial}
-            className="absolute right-0 lg:-right-6 top-1/2 -translate-y-1/2 w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-background shadow-md flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
             aria-label="Next testimonial"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={18} />
           </button>
-
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-8">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  index === currentIndex 
-                    ? "bg-primary w-6" 
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                }`}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
-            ))}
-          </div>
         </div>
 
-        {/* Trust Badges */}
-        <div className="mt-12 flex flex-wrap justify-center items-center gap-8 text-muted-foreground">
+        {/* Trust Stats */}
+        <div className="mt-10 flex flex-wrap justify-center items-center gap-8 lg:gap-12 text-muted-foreground">
           <div className="text-center">
-            <p className="text-3xl font-bold text-foreground font-heading">10K+</p>
-            <p className="text-sm font-body">Happy Customers</p>
+            <p className="text-2xl lg:text-3xl font-bold text-foreground">10K+</p>
+            <p className="text-xs uppercase tracking-wide">Happy Customers</p>
           </div>
-          <div className="w-px h-12 bg-border hidden sm:block" />
+          <div className="w-px h-10 bg-border hidden sm:block" />
           <div className="text-center">
-            <p className="text-3xl font-bold text-foreground font-heading">4.8</p>
-            <p className="text-sm font-body">Average Rating</p>
+            <p className="text-2xl lg:text-3xl font-bold text-foreground">4.8</p>
+            <p className="text-xs uppercase tracking-wide">Average Rating</p>
           </div>
-          <div className="w-px h-12 bg-border hidden sm:block" />
+          <div className="w-px h-10 bg-border hidden sm:block" />
           <div className="text-center">
-            <p className="text-3xl font-bold text-foreground font-heading">500+</p>
-            <p className="text-sm font-body">5-Star Reviews</p>
+            <p className="text-2xl lg:text-3xl font-bold text-foreground">500+</p>
+            <p className="text-xs uppercase tracking-wide">5-Star Reviews</p>
           </div>
         </div>
       </div>
