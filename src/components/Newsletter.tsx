@@ -50,10 +50,10 @@ const Newsletter = () => {
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-2xl mx-auto text-center animate-fade-in">
-          <h2 className="text-2xl lg:text-3xl font-bold mb-4 font-heading">
+          <h2 className="text-2xl lg:text-3xl font-bold mb-4">
             Join the Vastra Family
           </h2>
-          <p className="text-primary-foreground/80 mb-8 font-body">
+          <p className="text-primary-foreground/80 mb-8">
             Subscribe to get exclusive offers, new arrivals & insider-only discounts
           </p>
           
@@ -77,7 +77,7 @@ const Newsletter = () => {
             </Button>
           </form>
           
-          <p className="text-xs text-primary-foreground/60 mt-4 font-body">
+          <p className="text-xs text-primary-foreground/60 mt-4">
             By subscribing, you agree to receive marketing emails. Unsubscribe anytime.
           </p>
         </div>

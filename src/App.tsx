@@ -27,6 +27,7 @@ import Returns from "./pages/Returns";
 import SizeGuide from "./pages/SizeGuide";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import TrackOrder from "./pages/TrackOrder";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
 import AdminOrders from "./pages/admin/AdminOrders";
@@ -65,6 +66,7 @@ const App = () => (
                 <Route path="/size-guide" element={<SizeGuide />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
+                <Route path="/track-order" element={<TrackOrder />} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>

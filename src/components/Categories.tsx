@@ -9,13 +9,13 @@ const categories = [
     name: "Ethnic Wear",
     description: "Traditional elegance",
     image: categoryEthnic,
-    link: "/shop?category=ethnic"
+    link: "/ethnic-wear"
   },
   {
     name: "Western Wear",
     description: "Modern & stylish",
     image: categoryWestern,
-    link: "/shop?category=western"
+    link: "/western-wear"
   },
   {
     name: "Festive Collection",
@@ -36,10 +36,10 @@ const Categories = () => {
     <section className="py-12 lg:py-20 bg-secondary/30 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-10 animate-fade-in">
-          <span className="text-sm font-semibold text-primary tracking-widest uppercase font-body">
+          <span className="text-sm font-semibold text-primary tracking-widest uppercase">
             Browse By
           </span>
-          <h2 className="text-2xl lg:text-4xl font-bold text-foreground mt-2 font-heading">
+          <h2 className="text-2xl lg:text-4xl font-bold text-foreground mt-2">
             Shop Categories
           </h2>
         </div>
@@ -67,10 +67,10 @@ const Categories = () => {
               
               {/* Content */}
               <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6 transform transition-transform duration-300 group-hover:translate-y-[-8px]">
-                <h3 className="text-lg lg:text-xl font-bold text-background mb-1 font-heading">
+                <h3 className="text-lg lg:text-xl font-bold text-background mb-1">
                   {category.name}
                 </h3>
-                <p className="text-sm text-background/80 hidden lg:block font-body opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-sm text-background/80 hidden lg:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   {category.description}
                 </p>
               </div>
