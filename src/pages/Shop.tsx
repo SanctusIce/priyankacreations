@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useProducts, useCategories } from '@/hooks/useProducts';
@@ -35,6 +35,9 @@ import kurti8 from "@/assets/kurti-8.jpg";
 const fallbackImages = [kurti1, kurti2, kurti3, kurti4, kurti5, kurti6, kurti7, kurti8];
 
 const Shop = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search') || '';
+  
   const [categorySlug, setCategorySlug] = useState<string>('');
   const [sortBy, setSortBy] = useState<'newest' | 'price_asc' | 'price_desc' | 'name'>('newest');
   const [priceRange, setPriceRange] = useState<string>('');
@@ -59,6 +62,7 @@ const Shop = () => {
     sortBy,
     minPrice: selectedPriceRange?.min || 0,
     maxPrice: selectedPriceRange?.max || 100000,
+    search: searchQuery || undefined,
   });
 
   const { data: categories } = useCategories();
@@ -76,11 +80,16 @@ const Shop = () => {
     setOpenFilters(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const activeFiltersCount = [categorySlug, priceRange].filter(Boolean).length;
+  const activeFiltersCount = [categorySlug, priceRange, searchQuery].filter(Boolean).length;
 
   const clearAllFilters = () => {
     setCategorySlug('');
     setPriceRange('');
+    setSearchParams({});
+  };
+
+  const clearSearch = () => {
+    setSearchParams({});
   };
 
   // Get fallback image based on product index
@@ -179,7 +188,11 @@ const Shop = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <h1 className="text-xl font-bold text-foreground font-heading">
-                  {categorySlug ? categories?.find(c => c.slug === categorySlug)?.name : 'All Products'}
+                  {searchQuery 
+                    ? `Search results for "${searchQuery}"`
+                    : categorySlug 
+                      ? categories?.find(c => c.slug === categorySlug)?.name 
+                      : 'All Products'}
                   <span className="text-muted-foreground font-normal ml-2 font-body">
                     - {products?.length || 0} items
                   </span>
@@ -251,6 +264,14 @@ const Shop = () => {
             {/* Active Filters */}
             {activeFiltersCount > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
+                {searchQuery && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-sm rounded-full font-body">
+                    Search: "{searchQuery}"
+                    <button onClick={clearSearch}>
+                      <X size={14} />
+                    </button>
+                  </span>
+                )}
                 {categorySlug && (
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-sm rounded-full font-body">
                     {categories?.find(c => c.slug === categorySlug)?.name}
