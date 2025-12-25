@@ -125,7 +125,7 @@ const Hero = () => {
               </p>
 
               <div 
-                className={`flex flex-wrap gap-3 transition-all duration-500 ${
+                className={`transition-all duration-500 ${
                   index === currentSlide ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
                 }`}
                 style={{ transitionDelay: "500ms" }}
@@ -133,15 +133,6 @@ const Hero = () => {
                 <Link to={slide.link}>
                   <Button size="lg" className="h-11 px-6 font-semibold text-sm rounded-sm">
                     {slide.cta}
-                  </Button>
-                </Link>
-                <Link to="/shop">
-                  <Button 
-                    variant="outline" 
-                    size="lg" 
-                    className="h-11 px-6 font-semibold text-sm border-background text-background hover:bg-background hover:text-foreground rounded-sm"
-                  >
-                    {slide.ctaSecondary}
                   </Button>
                 </Link>
               </div>
