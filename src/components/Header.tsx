@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navLinks = [
-  { name: "Ethnic Wear", href: "/shop?category=ethnic" },
-  { name: "Western Wear", href: "/shop?category=western" },
+  { name: "Ethnic Wear", href: "/ethnic-wear" },
+  { name: "Western Wear", href: "/western-wear" },
   { name: "Festive", href: "/shop?category=festive" },
   { name: "Sale", href: "/sale", badge: "✨" },
 ];

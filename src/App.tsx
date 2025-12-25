@@ -11,6 +11,8 @@ import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Shop from "./pages/Shop";
+import EthnicWear from "./pages/EthnicWear";
+import WesternWear from "./pages/WesternWear";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
@@ -45,6 +47,8 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/shop" element={<Shop />} />
+                <Route path="/ethnic-wear" element={<EthnicWear />} />
+                <Route path="/western-wear" element={<WesternWear />} />
                 <Route path="/sale" element={<Sale />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
