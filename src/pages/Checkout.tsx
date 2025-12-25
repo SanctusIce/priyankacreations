@@ -196,10 +196,11 @@ const Checkout = () => {
 
       if (itemsError) throw itemsError;
 
-      // Send SMS notification to admin
+      // Send notifications to admin (SMS + Email backup)
+      const addressStr = `${selectedAddress.address_line1}${selectedAddress.address_line2 ? ', ' + selectedAddress.address_line2 : ''}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode}`;
+      
+      // Send SMS notification
       try {
-        const addressStr = `${selectedAddress.address_line1}${selectedAddress.address_line2 ? ', ' + selectedAddress.address_line2 : ''}, ${selectedAddress.city}, ${selectedAddress.state} - ${selectedAddress.pincode}`;
-        
         await supabase.functions.invoke('send-order-sms', {
           body: {
             orderNumber: order.order_number,
@@ -218,7 +219,33 @@ const Checkout = () => {
         console.log('SMS notification sent');
       } catch (smsError) {
         console.error('Failed to send SMS:', smsError);
-        // Don't fail the order if SMS fails
+      }
+
+      // Send Email notification (backup)
+      try {
+        await supabase.functions.invoke('send-order-email', {
+          body: {
+            orderNumber: order.order_number,
+            customerName: selectedAddress.full_name,
+            customerEmail: user?.email || '',
+            customerPhone: selectedAddress.phone,
+            customerAddress: addressStr,
+            items: cartItems.map(item => ({
+              name: item.product?.name || '',
+              quantity: item.quantity,
+              size: item.selected_size,
+              color: item.selected_color,
+              price: (item.product?.price || 0) * item.quantity,
+            })),
+            subtotal: cartTotal,
+            shippingCost,
+            discount,
+            total: finalTotal,
+          }
+        });
+        console.log('Email notification sent');
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError);
       }
 
       // Clear cart
