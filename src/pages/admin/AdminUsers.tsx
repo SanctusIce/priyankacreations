@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -29,7 +30,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { Loader2, Users, Search, Shield, ShieldCheck, User, Mail, Phone, Calendar } from 'lucide-react';
+import { Loader2, Users, Search, Shield, ShieldCheck, User, Mail, Phone, Calendar, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface UserProfile {
@@ -43,6 +44,7 @@ interface UserProfile {
 
 const AdminUsers = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [newRole, setNewRole] = useState<string>('');
@@ -207,17 +209,26 @@ const AdminUsers = () => {
                         {getRoleBadge(user.roles)}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedUser(user);
-                            setNewRole(user.roles.includes('admin') ? 'admin' : 'user');
-                          }}
-                        >
-                          <Shield className="h-4 w-4 mr-1" />
-                          <span className="hidden sm:inline">Manage</span>
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => navigate(`/admin/users/${user.id}`)}
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedUser(user);
+                              setNewRole(user.roles.includes('admin') ? 'admin' : 'user');
+                            }}
+                          >
+                            <Shield className="h-4 w-4 mr-1" />
+                            <span className="hidden sm:inline">Manage</span>
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
