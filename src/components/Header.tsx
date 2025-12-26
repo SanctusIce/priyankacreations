@@ -18,7 +18,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import SearchSuggestions from "@/components/SearchSuggestions";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const navLinks = [
   { name: "Ethnic Wear", href: "/ethnic-wear" },
@@ -289,9 +288,7 @@ const Header = () => {
       {/* Mobile Search Modal */}
       <Dialog open={isMobileSearchOpen} onOpenChange={setIsMobileSearchOpen}>
         <DialogContent className="sm:max-w-md top-20 translate-y-0">
-          <VisuallyHidden>
-            <DialogTitle>Search Products</DialogTitle>
-          </VisuallyHidden>
+          <DialogTitle className="sr-only">Search Products</DialogTitle>
           <form onSubmit={handleSearch}>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
