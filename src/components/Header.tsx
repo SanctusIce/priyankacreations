@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import SearchSuggestions from "@/components/SearchSuggestions";
 
 const navLinks = [
   { name: "Ethnic Wear", href: "/ethnic-wear" },
@@ -23,6 +24,7 @@ const navLinks = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const { user, signOut } = useAuth();
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
@@ -38,6 +40,7 @@ const Header = () => {
     if (searchQuery.trim()) {
       navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
+      setShowSuggestions(false);
     }
   };
 
@@ -93,8 +96,18 @@ const Header = () => {
                 <Input
                   placeholder="Search for ethnic wear, dresses..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
                   className="pl-10 pr-4 bg-secondary/50 border-border h-10 text-sm rounded-md w-full"
+                />
+                <SearchSuggestions
+                  query={searchQuery}
+                  isOpen={showSuggestions}
+                  onClose={() => setShowSuggestions(false)}
+                  onSelect={() => setSearchQuery('')}
                 />
               </div>
             </form>
@@ -194,8 +207,21 @@ const Header = () => {
                 <Input
                   placeholder="Search for products..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
                   className="pl-10 bg-secondary/50 border-border h-10 text-sm"
+                />
+                <SearchSuggestions
+                  query={searchQuery}
+                  isOpen={showSuggestions}
+                  onClose={() => setShowSuggestions(false)}
+                  onSelect={() => {
+                    setSearchQuery('');
+                    setIsMenuOpen(false);
+                  }}
                 />
               </div>
             </form>
