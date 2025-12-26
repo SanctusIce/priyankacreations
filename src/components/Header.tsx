@@ -12,7 +12,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import SearchSuggestions from "@/components/SearchSuggestions";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const navLinks = [
   { name: "Ethnic Wear", href: "/ethnic-wear" },
@@ -25,6 +31,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
@@ -41,6 +48,7 @@ const Header = () => {
       navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
       setShowSuggestions(false);
+      setIsMobileSearchOpen(false);
     }
   };
 
@@ -66,8 +74,8 @@ const Header = () => {
 
             {/* Logo */}
             <Link to="/" className="flex-shrink-0">
-              <h1 className="text-xl lg:text-2xl font-bold text-primary tracking-tight font-heading italic">
-                Vastra
+              <h1 className="text-lg lg:text-xl font-bold text-primary tracking-tight font-heading">
+                Priyanka's Creations
               </h1>
             </Link>
 
@@ -115,9 +123,13 @@ const Header = () => {
             {/* Actions */}
             <div className="flex items-center gap-0">
               {/* Mobile Search Toggle */}
-              <Link to="/shop" className="lg:hidden p-2">
+              <button 
+                onClick={() => setIsMobileSearchOpen(true)} 
+                className="lg:hidden p-2"
+                aria-label="Open search"
+              >
                 <Search size={20} />
-              </Link>
+              </button>
 
               {/* User Menu */}
               {user ? (
@@ -273,6 +285,40 @@ const Header = () => {
           </div>
         </nav>
       )}
+
+      {/* Mobile Search Modal */}
+      <Dialog open={isMobileSearchOpen} onOpenChange={setIsMobileSearchOpen}>
+        <DialogContent className="sm:max-w-md top-20 translate-y-0">
+          <VisuallyHidden>
+            <DialogTitle>Search Products</DialogTitle>
+          </VisuallyHidden>
+          <form onSubmit={handleSearch}>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search for products..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => setShowSuggestions(true)}
+                className="pl-10 bg-secondary/50 border-border h-12 text-base"
+                autoFocus
+              />
+              <SearchSuggestions
+                query={searchQuery}
+                isOpen={showSuggestions}
+                onClose={() => setShowSuggestions(false)}
+                onSelect={() => {
+                  setSearchQuery('');
+                  setIsMobileSearchOpen(false);
+                }}
+              />
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };
