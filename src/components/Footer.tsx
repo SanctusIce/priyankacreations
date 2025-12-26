@@ -9,7 +9,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/">
-              <h3 className="text-xl font-heading font-bold text-background italic mb-3">Vastra</h3>
+              <h3 className="text-xl font-heading font-bold text-background mb-3">Priyanka's Creations</h3>
             </Link>
             <p className="text-background/60 text-sm leading-relaxed mb-5">
               Celebrating the timeless beauty of Indian ethnic wear. Handcrafted with love, designed for the modern woman.
@@ -89,7 +89,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-2">
                 <Mail size={14} className="text-primary shrink-0" />
-                <a href="mailto:hello@vastra.com" className="text-background/60 hover:text-primary transition-colors">hello@vastra.com</a>
+                <a href="mailto:hello@priyankascreations.com" className="text-background/60 hover:text-primary transition-colors">hello@priyankascreations.com</a>
               </li>
             </ul>
           </div>
@@ -97,7 +97,7 @@ const Footer = () => {
 
         {/* Bottom */}
         <div className="border-t border-background/10 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-background/50">
-          <p>© 2025 Vastra. All rights reserved.</p>
+          <p>© 2025 Priyanka's Creations. All rights reserved.</p>
           <div className="flex gap-6">
             <Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
