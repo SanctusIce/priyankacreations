@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Header from "@/components/Header";
+import PromoStrip from "@/components/PromoStrip";
 import Hero from "@/components/Hero";
 import Categories from "@/components/Categories";
 import FeaturedProducts from "@/components/FeaturedProducts";
@@ -20,6 +21,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <PromoStrip />
       <Header />
       <main className="pt-[88px] lg:pt-[96px]">
         <Hero />
