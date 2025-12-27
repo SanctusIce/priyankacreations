@@ -1,30 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { X, Sparkles, Clock, Gift, Truck, Percent } from 'lucide-react';
+import { X, Sparkles, Gift, Truck, Percent } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
-const promos = [
-  { icon: Percent, text: "MEGA SALE: Up to 50% OFF", link: "/sale", color: "text-accent" },
-  { icon: Gift, text: "Use code WELCOME15 for 15% off first order", link: "/shop", color: "text-primary-foreground" },
-  { icon: Truck, text: "FREE Shipping on orders above ₹999", link: "/shop", color: "text-primary-foreground" },
-  { icon: Sparkles, text: "New Arrivals: Festival Collection", link: "/shop?filter=new", color: "text-accent" },
-];
+interface Promotion {
+  id: string;
+  icon: string;
+  text: string;
+  link: string;
+  color: string;
+}
+
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  percent: Percent,
+  gift: Gift,
+  truck: Truck,
+  sparkles: Sparkles,
+};
 
 const PromoStrip = () => {
   const [currentPromo, setCurrentPromo] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchPromotions = async () => {
+      const { data, error } = await supabase
+        .from('promotions')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+
+      if (!error && data && data.length > 0) {
+        setPromotions(data);
+      } else {
+        // Fallback to default promotions if none found
+        setPromotions([
+          { id: '1', icon: 'percent', text: 'MEGA SALE: Up to 50% OFF', link: '/sale', color: 'text-accent' },
+          { id: '2', icon: 'gift', text: 'Use code WELCOME15 for 15% off first order', link: '/shop', color: 'text-primary-foreground' },
+          { id: '3', icon: 'truck', text: 'FREE Shipping on orders above ₹999', link: '/shop', color: 'text-primary-foreground' },
+          { id: '4', icon: 'sparkles', text: 'New Arrivals: Festival Collection', link: '/shop?filter=new', color: 'text-accent' },
+        ]);
+      }
+      setLoading(false);
+    };
+
+    fetchPromotions();
+  }, []);
+
+  useEffect(() => {
+    if (promotions.length === 0) return;
+    
     const interval = setInterval(() => {
-      setCurrentPromo((prev) => (prev + 1) % promos.length);
+      setCurrentPromo((prev) => (prev + 1) % promotions.length);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [promotions.length]);
 
-  if (!isVisible) return null;
+  if (!isVisible || loading || promotions.length === 0) return null;
 
-  const promo = promos[currentPromo];
-  const Icon = promo.icon;
+  const promo = promotions[currentPromo];
+  const Icon = iconMap[promo.icon] || Sparkles;
 
   return (
     <div className="bg-primary text-primary-foreground relative overflow-hidden">
@@ -52,7 +90,7 @@ const PromoStrip = () => {
 
       {/* Progress dots */}
       <div className="flex justify-center gap-1 pb-1">
-        {promos.map((_, i) => (
+        {promotions.map((_, i) => (
           <div
             key={i}
             className={`w-1.5 h-1.5 rounded-full transition-colors ${
