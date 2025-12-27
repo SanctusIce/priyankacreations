@@ -5,11 +5,12 @@ import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
+import heroVideo from "@/assets/hero-video.mp4";
 
 const slides = [
   {
     image: heroImage,
-    video: "https://cdn.pixabay.com/video/2023/07/22/172787-849815892_large.mp4",
+    video: heroVideo,
     subtitle: "FESTIVE SEASON",
     title: "Celebrate Every",
     titleHighlight: "Moment",
