@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import ProductCard from "./ProductCard";
 import kurti1 from "@/assets/kurti-1.jpg";
 import kurti2 from "@/assets/kurti-2.jpg";
@@ -47,27 +46,26 @@ const products = [
 
 const FeaturedProducts = () => {
   return (
-    <section className="py-12 lg:py-16 bg-secondary/30">
+    <section className="py-16 lg:py-24 bg-background">
       <div className="container mx-auto px-4">
-        <div className="flex items-end justify-between gap-4 mb-8">
+        <div className="flex items-end justify-between gap-4 mb-10">
           <div>
-            <span className="text-xs font-medium text-primary tracking-[0.2em] uppercase">
-              Curated For You
-            </span>
-            <h2 className="text-2xl lg:text-3xl font-bold text-foreground mt-1">
-              Featured Collection
+            <p className="text-xs tracking-[0.3em] text-muted-foreground uppercase mb-2">
+              New in
+            </p>
+            <h2 className="text-2xl lg:text-3xl font-normal text-foreground">
+              Featured
             </h2>
           </div>
           <Link
             to="/shop"
-            className="text-sm font-medium text-primary hover:underline inline-flex items-center gap-1 group"
+            className="text-xs text-foreground border-b border-foreground pb-0.5 hover:text-muted-foreground hover:border-muted-foreground transition-colors"
           >
-            View All Products 
-            <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+            View all
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {products.map((product, index) => (
             <div
               key={product.id}
