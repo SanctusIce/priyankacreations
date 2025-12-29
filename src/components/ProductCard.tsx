@@ -69,7 +69,7 @@ const ProductCard = ({
           src={image}
           alt={name}
           className={cn(
-            "w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105",
+            "w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-102 product-image",
             !imageLoaded && "opacity-0"
           )}
           onLoad={() => setImageLoaded(true)}
@@ -78,39 +78,37 @@ const ProductCard = ({
         {/* Wishlist button */}
         <button
           onClick={handleWishlistClick}
-          className="wishlist-btn"
+          className="wishlist-btn opacity-0 group-hover:opacity-100"
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
-            size={16}
+            size={18}
+            strokeWidth={1.5}
             className={cn(
               "transition-colors",
-              isWishlisted ? "fill-primary text-primary" : "text-muted-foreground"
+              isWishlisted ? "fill-foreground text-foreground" : "text-foreground"
             )}
           />
         </button>
 
         {/* Sale badge */}
         {discount > 0 && (
-          <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs font-semibold px-2 py-1 rounded">
-            {discount}% OFF
+          <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-[10px] font-medium px-2 py-1 uppercase tracking-wide">
+            -{discount}%
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div className="p-3 space-y-1">
-        {/* Brand */}
-        <h3 className="brand-name">{brand}</h3>
-        
+      <div className="pt-3 space-y-1">
         {/* Product name */}
-        <p className="product-name">{name}</p>
+        <p className="text-xs text-foreground line-clamp-1">{name}</p>
         
         {/* Price */}
-        <div className="flex items-center gap-2 flex-wrap pt-1">
-          <span className="price-current">₹{price.toLocaleString()}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium text-foreground">₹{price.toLocaleString()}</span>
           {originalPrice && originalPrice > price && (
-            <span className="price-original">₹{originalPrice.toLocaleString()}</span>
+            <span className="text-xs text-muted-foreground line-through">₹{originalPrice.toLocaleString()}</span>
           )}
         </div>
       </div>

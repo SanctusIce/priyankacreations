@@ -1,104 +1,93 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { X, Sparkles, Gift, Truck, Percent } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Promotion {
   id: string;
-  icon: string;
   text: string;
   link: string;
   color: string;
+  icon: string;
+  is_active: boolean;
+  sort_order: number;
 }
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  percent: Percent,
-  gift: Gift,
-  truck: Truck,
-  sparkles: Sparkles,
-};
+const defaultPromotions: Promotion[] = [
+  {
+    id: "default-1",
+    text: "Free shipping on orders above ₹999",
+    link: "/shipping",
+    color: "#000000",
+    icon: "truck",
+    is_active: true,
+    sort_order: 0,
+  },
+  {
+    id: "default-2",
+    text: "Use code FIRST15 for 15% off your first order",
+    link: "/shop",
+    color: "#000000",
+    icon: "tag",
+    is_active: true,
+    sort_order: 1,
+  },
+];
 
 const PromoStrip = () => {
-  const [currentPromo, setCurrentPromo] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const [promotions, setPromotions] = useState<Promotion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [promotions, setPromotions] = useState<Promotion[]>(defaultPromotions);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchPromotions = async () => {
       const { data, error } = await supabase
-        .from('promotions')
-        .select('*')
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true });
+        .from("promotions")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true });
 
       if (!error && data && data.length > 0) {
         setPromotions(data);
-      } else {
-        // Fallback to default promotions if none found
-        setPromotions([
-          { id: '1', icon: 'percent', text: 'MEGA SALE: Up to 50% OFF', link: '/sale', color: 'text-accent' },
-          { id: '2', icon: 'gift', text: 'Use code WELCOME15 for 15% off first order', link: '/shop', color: 'text-primary-foreground' },
-          { id: '3', icon: 'truck', text: 'FREE Shipping on orders above ₹999', link: '/shop', color: 'text-primary-foreground' },
-          { id: '4', icon: 'sparkles', text: 'New Arrivals: Festival Collection', link: '/shop?filter=new', color: 'text-accent' },
-        ]);
       }
-      setLoading(false);
     };
 
     fetchPromotions();
   }, []);
 
   useEffect(() => {
-    if (promotions.length === 0) return;
+    if (promotions.length <= 1) return;
     
     const interval = setInterval(() => {
-      setCurrentPromo((prev) => (prev + 1) % promotions.length);
+      setCurrentIndex((prev) => (prev + 1) % promotions.length);
     }, 4000);
 
     return () => clearInterval(interval);
   }, [promotions.length]);
 
-  if (!isVisible || loading || promotions.length === 0) return null;
+  if (!isVisible) return null;
 
-  const promo = promotions[currentPromo];
-  const Icon = iconMap[promo.icon] || Sparkles;
+  const currentPromo = promotions[currentIndex];
 
   return (
-    <div className="bg-primary text-primary-foreground relative overflow-hidden">
-      <div className="absolute inset-0 opacity-10" />
-      
-      <div className="container mx-auto px-4 py-2 relative">
-        <div className="flex items-center justify-center gap-2 animate-fade-in" key={currentPromo}>
-          <Icon className={`h-4 w-4 ${promo.color} animate-pulse`} />
+    <div className="bg-foreground text-background py-2.5 relative">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-center gap-2 text-xs tracking-wide">
           <Link 
-            to={promo.link} 
-            className="text-sm font-medium hover:underline"
+            to={currentPromo.link}
+            className="hover:underline transition-all"
           >
-            {promo.text}
+            {currentPromo.text}
           </Link>
-          <Icon className={`h-4 w-4 ${promo.color} animate-pulse`} />
         </div>
-
-        <button
-          onClick={() => setIsVisible(false)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-primary-foreground/10 rounded"
-        >
-          <X className="h-4 w-4" />
-        </button>
       </div>
-
-      {/* Progress dots */}
-      <div className="flex justify-center gap-1 pb-1">
-        {promotions.map((_, i) => (
-          <div
-            key={i}
-            className={`w-1.5 h-1.5 rounded-full transition-colors ${
-              i === currentPromo ? 'bg-accent' : 'bg-primary-foreground/30'
-            }`}
-          />
-        ))}
-      </div>
+      <button
+        onClick={() => setIsVisible(false)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-background/70 hover:text-background transition-colors"
+        aria-label="Close promotion banner"
+      >
+        <X size={14} strokeWidth={1.5} />
+      </button>
     </div>
   );
 };

@@ -18,11 +18,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Libre Baskerville', 'serif'],
-        body: ['Jost', 'sans-serif'],
-        sans: ['Jost', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
-        serif: ['Libre Baskerville', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace']
+        heading: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -74,9 +74,9 @@ export default {
         }
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)'
+        lg: '0',
+        md: '0',
+        sm: '0'
       },
       keyframes: {
         'accordion-down': {
@@ -103,15 +103,22 @@ export default {
         pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
       },
       boxShadow: {
-        'card': 'var(--shadow-card)',
-        'hover': 'var(--shadow-hover)',
-        'sm': 'var(--shadow-sm)',
-        'md': 'var(--shadow-md)',
-        'lg': 'var(--shadow-lg)',
-        'xl': 'var(--shadow-xl)'
+        'card': 'none',
+        'hover': 'none',
+        'sm': 'none',
+        'md': 'none',
+        'lg': 'none',
+        'xl': 'none'
       },
       fontSize: {
         'xxs': ['0.625rem', { lineHeight: '0.875rem' }]
+      },
+      letterSpacing: {
+        'tighter': '-0.02em',
+        'tight': '-0.01em',
+        'wide': '0.05em',
+        'wider': '0.1em',
+        'widest': '0.2em'
       }
     }
   },

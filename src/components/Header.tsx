@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { ShoppingBag, Heart, User, Menu, X, Search, LogOut, Package, ChevronDown } from "lucide-react";
+import { ShoppingBag, Heart, User, Menu, X, Search, LogOut, Package } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -20,8 +20,8 @@ import {
 import SearchSuggestions from "@/components/SearchSuggestions";
 
 const navLinks = [
-  { name: "Ethnic Wear", href: "/ethnic-wear" },
-  { name: "Western Wear", href: "/western-wear" },
+  { name: "Ethnic", href: "/ethnic-wear" },
+  { name: "Western", href: "/western-wear" },
   { name: "Festive", href: "/shop?category=festive" },
   { name: "Sale", href: "/sale", highlight: true },
 ];
@@ -53,137 +53,124 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background">
-      {/* Promo Strip */}
-      <div className="bg-primary text-primary-foreground py-2 text-center text-xs sm:text-sm font-medium">
-        Free Shipping on orders above ₹999 | Use code FIRST15 for 15% off
-      </div>
-
       {/* Main header */}
       <div className="border-b border-border">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-14 lg:h-16 gap-4">
+          <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Mobile menu button */}
             <button
               className="lg:hidden p-2 -ml-2"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
             >
-              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              {isMenuOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
             </button>
 
-            {/* Logo */}
-            <Link to="/" className="flex-shrink-0">
-              <h1 className="text-lg lg:text-xl font-bold text-primary tracking-tight font-heading">
-                Priyanka's Creations
-              </h1>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+            {/* Desktop Navigation - Left */}
+            <nav className="hidden lg:flex items-center gap-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`text-sm tracking-wide transition-colors link-underline ${
                     link.highlight 
-                      ? "text-primary hover:text-primary/80" 
-                      : "text-foreground hover:text-primary"
+                      ? "text-primary font-medium" 
+                      : "text-foreground hover:text-muted-foreground"
                   }`}
                 >
                   {link.name}
-                  {link.highlight && <span className="ml-1">+</span>}
                 </Link>
               ))}
             </nav>
 
-            {/* Search Bar - Desktop */}
-            <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-md">
-              <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search for ethnic wear, dresses..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setShowSuggestions(true);
-                  }}
-                  onFocus={() => setShowSuggestions(true)}
-                  className="pl-10 pr-4 bg-secondary/50 border-border h-10 text-sm rounded-md w-full"
-                />
-                <SearchSuggestions
-                  query={searchQuery}
-                  isOpen={showSuggestions}
-                  onClose={() => setShowSuggestions(false)}
-                  onSelect={() => setSearchQuery('')}
-                />
-              </div>
-            </form>
+            {/* Logo - Center */}
+            <Link to="/" className="absolute left-1/2 -translate-x-1/2">
+              <h1 className="text-lg lg:text-xl font-medium text-foreground tracking-tight">
+                VASTRA
+              </h1>
+            </Link>
 
-            {/* Actions */}
-            <div className="flex items-center gap-0">
+            {/* Actions - Right */}
+            <div className="flex items-center gap-1">
+              {/* Desktop Search */}
+              <form onSubmit={handleSearch} className="hidden lg:flex">
+                <div className="relative">
+                  <Input
+                    placeholder="Search"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    onFocus={() => setShowSuggestions(true)}
+                    className="w-40 h-9 text-sm bg-transparent border-0 border-b border-border rounded-none focus:ring-0 focus:border-foreground px-0 placeholder:text-muted-foreground"
+                  />
+                  <SearchSuggestions
+                    query={searchQuery}
+                    isOpen={showSuggestions}
+                    onClose={() => setShowSuggestions(false)}
+                    onSelect={() => setSearchQuery('')}
+                  />
+                </div>
+              </form>
+
               {/* Mobile Search Toggle */}
               <button 
                 onClick={() => setIsMobileSearchOpen(true)} 
                 className="lg:hidden p-2"
                 aria-label="Open search"
               >
-                <Search size={20} />
+                <Search size={20} strokeWidth={1.5} />
               </button>
 
               {/* User Menu */}
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="hidden lg:flex flex-col items-center gap-0.5 text-foreground hover:text-primary transition-colors px-3 py-2">
-                      <User size={20} />
-                      <span className="text-[10px] font-medium flex items-center gap-0.5">
-                        Profile <ChevronDown size={10} />
-                      </span>
+                    <button className="p-2 text-foreground hover:text-muted-foreground transition-colors">
+                      <User size={20} strokeWidth={1.5} />
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <div className="px-4 py-3 border-b border-border">
-                      <p className="text-sm font-semibold">Hello!</p>
+                  <DropdownMenuContent align="end" className="w-48 rounded-none border-border">
+                    <div className="px-3 py-2 border-b border-border">
                       <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
-                    <DropdownMenuItem asChild>
-                      <Link to="/orders" className="cursor-pointer">
-                        <Package size={16} className="mr-2" />
-                        My Orders
+                    <DropdownMenuItem asChild className="rounded-none">
+                      <Link to="/orders" className="cursor-pointer text-sm">
+                        <Package size={16} className="mr-2" strokeWidth={1.5} />
+                        Orders
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/wishlist" className="cursor-pointer">
-                        <Heart size={16} className="mr-2" />
-                        My Wishlist
+                    <DropdownMenuItem asChild className="rounded-none">
+                      <Link to="/wishlist" className="cursor-pointer text-sm">
+                        <Heart size={16} className="mr-2" strokeWidth={1.5} />
+                        Wishlist
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
-                      <LogOut size={16} className="mr-2" />
-                      Logout
+                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-sm rounded-none">
+                      <LogOut size={16} className="mr-2" strokeWidth={1.5} />
+                      Sign out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
                 <Link 
                   to="/auth"
-                  className="hidden lg:flex flex-col items-center gap-0.5 text-foreground hover:text-primary transition-colors px-3 py-2"
+                  className="p-2 text-foreground hover:text-muted-foreground transition-colors"
                 >
-                  <User size={20} />
-                  <span className="text-[10px] font-medium">Login</span>
+                  <User size={20} strokeWidth={1.5} />
                 </Link>
               )}
 
               {/* Wishlist */}
               <Link 
                 to={user ? "/wishlist" : "/auth"}
-                className="flex flex-col items-center gap-0.5 text-foreground hover:text-primary transition-colors px-2 lg:px-3 py-2 relative"
+                className="p-2 text-foreground hover:text-muted-foreground transition-colors relative"
               >
-                <Heart size={20} />
-                <span className="hidden lg:block text-[10px] font-medium">Wishlist</span>
+                <Heart size={20} strokeWidth={1.5} />
                 {wishlistCount > 0 && (
-                  <span className="absolute top-0 right-0 lg:right-1 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-medium flex items-center justify-center">
                     {wishlistCount}
                   </span>
                 )}
@@ -192,12 +179,11 @@ const Header = () => {
               {/* Cart */}
               <Link 
                 to="/cart"
-                className="flex flex-col items-center gap-0.5 text-foreground hover:text-primary transition-colors px-2 lg:px-3 py-2 relative"
+                className="p-2 text-foreground hover:text-muted-foreground transition-colors relative"
               >
-                <ShoppingBag size={20} />
-                <span className="hidden lg:block text-[10px] font-medium">Bag</span>
+                <ShoppingBag size={20} strokeWidth={1.5} />
                 {cartCount > 0 && (
-                  <span className="absolute top-0 right-0 lg:right-1 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-medium flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
@@ -210,61 +196,34 @@ const Header = () => {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <nav className="lg:hidden bg-background border-b border-border animate-fade-in">
-          <div className="container mx-auto px-4 py-4">
-            {/* Mobile Search */}
-            <form onSubmit={handleSearch} className="mb-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search for products..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setShowSuggestions(true);
-                  }}
-                  onFocus={() => setShowSuggestions(true)}
-                  className="pl-10 bg-secondary/50 border-border h-10 text-sm"
-                />
-                <SearchSuggestions
-                  query={searchQuery}
-                  isOpen={showSuggestions}
-                  onClose={() => setShowSuggestions(false)}
-                  onSelect={() => {
-                    setSearchQuery('');
-                    setIsMenuOpen(false);
-                  }}
-                />
-              </div>
-            </form>
-
-            <div className="flex flex-col">
+          <div className="container mx-auto px-4 py-6">
+            <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className={`py-3 text-sm font-medium border-b border-border ${
-                    link.highlight ? "text-primary" : "text-foreground hover:text-primary"
+                  className={`text-lg tracking-wide ${
+                    link.highlight ? "text-primary" : "text-foreground"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
-                  {link.highlight && <span className="ml-1">+</span>}
                 </Link>
               ))}
-              {!user && (
+              <div className="h-px bg-border my-2" />
+              {!user ? (
                 <Link
                   to="/auth"
-                  className="py-3 text-sm font-bold text-primary"
+                  className="text-lg text-foreground"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Login / Sign Up
+                  Sign in
                 </Link>
-              )}
-              {user && (
+              ) : (
                 <>
                   <Link
                     to="/orders"
-                    className="py-3 text-sm font-medium text-foreground hover:text-primary border-b border-border"
+                    className="text-lg text-foreground"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     My Orders
@@ -274,9 +233,9 @@ const Header = () => {
                       handleSignOut();
                       setIsMenuOpen(false);
                     }}
-                    className="py-3 text-sm font-medium text-destructive text-left"
+                    className="text-lg text-foreground text-left"
                   >
-                    Logout
+                    Sign out
                   </button>
                 </>
               )}
@@ -287,20 +246,19 @@ const Header = () => {
 
       {/* Mobile Search Modal */}
       <Dialog open={isMobileSearchOpen} onOpenChange={setIsMobileSearchOpen}>
-        <DialogContent className="sm:max-w-md top-20 translate-y-0">
+        <DialogContent className="sm:max-w-md top-20 translate-y-0 rounded-none border-border">
           <DialogTitle className="sr-only">Search Products</DialogTitle>
           <form onSubmit={handleSearch}>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search for products..."
+                placeholder="Search"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                className="pl-10 bg-secondary/50 border-border h-12 text-base"
+                className="bg-transparent border-0 border-b border-border rounded-none h-12 text-base px-0 focus:ring-0 focus:border-foreground"
                 autoFocus
               />
               <SearchSuggestions
